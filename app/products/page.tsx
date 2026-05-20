@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Filter, Download, ShoppingCart, Heart } from 'lucide-react';
-import { products, categories } from '../src/data/products';
+import { products, categories } from '../../src/data/products';
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -11,7 +11,8 @@ export default function ProductsPage() {
 
   const filteredProducts = products.filter((product) => {
     const categoryMatch = selectedCategory === 'all' || product.category === selectedCategory;
-    const certMatch = selectedCerts.length === 0 || selectedCerts.some(cert => product.certified.includes(cert));
+    const certMatch =
+      selectedCerts.length === 0 || selectedCerts.some((cert) => (product.certified ?? []).includes(cert));
     return categoryMatch && certMatch;
   });
 
@@ -139,13 +140,13 @@ export default function ProductsPage() {
 
                       {/* 认证 */}
                       <div className="flex flex-wrap gap-1 mb-3">
-                        {product.certified.slice(0, 2).map((cert) => (
+                        {(product.certified ?? []).slice(0, 2).map((cert) => (
                           <span key={cert} className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
                             {cert}
                           </span>
                         ))}
-                        {product.certified.length > 2 && (
-                          <span className="text-xs text-gray-500 px-2 py-1">+{product.certified.length - 2}</span>
+                        {(product.certified ?? []).length > 2 && (
+                          <span className="text-xs text-gray-500 px-2 py-1">+{(product.certified ?? []).length - 2}</span>
                         )}
                       </div>
 

@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ChevronRight, Star, Truck, Lock, Zap, Download, Mail } from 'lucide-react';
-import { products, categories, features } from '../src/data/products';
+import { ChevronRight, Star, Truck, Lock, Zap, Download } from 'lucide-react';
+import { products } from '../src/data/products';
 
 export default function Home() {
   const featuredProducts = products.slice(0, 6);
@@ -121,6 +121,26 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* 核心优势 */}
+      <section className="py-12 bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-rose-100 rounded-lg flex items-center justify-center">
+                  <Star className="text-rose-600" size={24} />
+                </div>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-1">品质认证</h3>
+              <p className="text-sm text-gray-600">CE / RoHS / FDA</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Truck className="text-blue-600" size={24} />
+                </div>
+              </div>
               <h3 className="font-semibold text-gray-900 mb-1">快速物流</h3>
               <p className="text-sm text-gray-600">5-10工作日</p>
             </div>
@@ -132,6 +152,15 @@ export default function Home() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-1">隐私保护</h3>
               <p className="text-sm text-gray-600">完全隐蔽包装</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
+                  <Zap className="text-amber-600" size={24} />
+                </div>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-1">OEM定制</h3>
+              <p className="text-sm text-gray-600">小批量也可做</p>
             </div>
           </div>
         </div>
@@ -178,7 +207,7 @@ export default function Home() {
 
                   {/* 认证标签 */}
                   <div className="flex flex-wrap gap-2">
-                    {product.certified.map((cert) => (
+                    {(product.certified ?? []).map((cert) => (
                       <span key={cert} className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
                         {cert}
                       </span>
