@@ -14,6 +14,7 @@ import {
   Truck,
 } from 'lucide-react';
 import { products } from '../src/data/products';
+import { siteConfig } from '../src/config/site';
 
 const capabilityCards = [
   { title: 'OEM / Private Label', value: 'Supported', desc: 'Packaging, insert cards, and barcode labeling.' },
@@ -35,6 +36,8 @@ export default function Home() {
   const [subscribing, setSubscribing] = useState(false);
   const [subscribeMessage, setSubscribeMessage] = useState('');
   const [downloading, setDownloading] = useState(false);
+  const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
+  const linkedinHref = siteConfig.social.linkedin;
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,12 +98,14 @@ export default function Home() {
             <Link href="/products" className="text-sm font-medium text-slate-600 hover:text-slate-900">Products</Link>
             <Link href="/about" className="text-sm font-medium text-slate-600 hover:text-slate-900">Company</Link>
             <Link href="/contact" className="text-sm font-medium text-slate-600 hover:text-slate-900">Contact</Link>
-            <button
-              onClick={() => handleDownload('pricelist')}
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noreferrer"
               className="rounded-lg bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
             >
               Get Price Sheet
-            </button>
+            </a>
           </div>
         </nav>
       </header>
@@ -306,14 +311,22 @@ export default function Home() {
                 <Download className="mr-2 h-4 w-4" />
                 {downloading ? 'Preparing...' : 'Catalog CSV'}
               </button>
-              <button
-                onClick={() => handleDownload('pricelist')}
-                disabled={downloading}
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50"
               >
-                <Download className="mr-2 h-4 w-4" />
-                {downloading ? 'Preparing...' : 'Price List TXT'}
-              </button>
+                WhatsApp Quote
+              </a>
+              <a
+                href={linkedinHref}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+              >
+                LinkedIn Contact
+              </a>
             </div>
           </div>
         </div>
