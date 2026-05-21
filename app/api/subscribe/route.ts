@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 
 // In-memory storage for demo (replace with database in production)
 const subscribers = new Set<string>();
@@ -30,10 +30,10 @@ export async function POST(request: NextRequest) {
     // Send welcome email (implement with Resend, SendGrid, etc.)
     // Example with Resend:
     // const res = await resend.emails.send({
-    //   from: 'noreply@gilok-wholesale.com',
+    //   from: 'noreply@junhai-wholesale.com',
     //   to: email,
-    //   subject: 'Welcome to GILOK Wholesale',
-    //   html: `<h1>Welcome!</h1><p>Thank you for subscribing to GILOK.</p>`,
+    //   subject: 'Welcome to JUNHAI Wholesale',
+    //   html: `<h1>Welcome!</h1><p>Thank you for subscribing to JUNHAI.</p>`,
     // });
 
     return NextResponse.json(
@@ -59,3 +59,4 @@ export async function GET() {
     subscribers_count: subscribers.size,
   });
 }
+

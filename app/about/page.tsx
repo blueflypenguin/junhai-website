@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -18,7 +18,7 @@ export default function AboutPage() {
       <section className="bg-gradient-to-br from-gray-50 to-gray-100 py-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            关于 GILOK
+            关于 JUNHAI
           </h1>
           <p className="text-xl text-gray-600">
             全球领先的 B2B 批发平台，致力于为分销商、零售商提供优质产品和卓越服务
@@ -34,10 +34,10 @@ export default function AboutPage() {
               我们的故事
             </h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              GILOK 成立于2015年，总部位于中国。我们致力于为全球分销商、零售商和电商卖家提供优质的产品和专业的服务。
+              JUNHAI 成立于2015年，总部位于中国。我们致力于为全球分销商、零售商和电商卖家提供优质的产品和专业的服务。
             </p>
             <p className="text-gray-600 leading-relaxed mb-4">
-              过去10多年里，GILOK 已经为来自50多个国家的1000+客户服务，累计出货超过500万件产品，客户满意度达到98%以上。
+              过去10多年里，JUNHAI 已经为来自50多个国家的1000+客户服务，累计出货超过500万件产品，客户满意度达到98%以上。
             </p>
             <p className="text-gray-600 leading-relaxed">
               我们的使命是简化国际贸易，让每个人都能以合理的价格获得优质的产品。
@@ -190,3 +190,4 @@ export default function AboutPage() {
     </div>
   );
 }
+

@@ -1,17 +1,17 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 
-# GILOK 独立站 - 快速部署脚本
+# JUNHAI 独立站 - 快速部署脚本
 # 使用方式: bash deploy.sh
 
 set -e
 
-echo "🚀 GILOK 独立站快速部署指南"
+echo "🚀 JUNHAI 独立站快速部署指南"
 echo "======================================"
 echo ""
 
 # 检查是否在项目目录
 if [ ! -f "package.json" ]; then
-    echo "❌ 错误：请在 gilok-website 项目目录下运行此脚本"
+    echo "❌ 错误：请在 junhai-website 项目目录下运行此脚本"
     exit 1
 fi
 
@@ -27,20 +27,20 @@ echo ""
 echo "  1. 创建 GitHub 账号（如果还没有）："
 echo "     https://github.com/signup"
 echo ""
-echo "  2. 创建新仓库 'gilok-website'"
+echo "  2. 创建新仓库 'junhai-website'"
 echo ""
 echo "  3. 执行以下命令："
 echo ""
 echo "    git init"
 echo "    git add ."
-echo "    git commit -m 'GILOK 独立站 - 完整版本'"
+echo "    git commit -m 'JUNHAI 独立站 - 完整版本'"
 echo "    git branch -M main"
-echo "    git remote add origin https://github.com/YOUR_USERNAME/gilok-website.git"
+echo "    git remote add origin https://github.com/YOUR_USERNAME/junhai-website.git"
 echo "    git push -u origin main"
 echo ""
 echo "  4. 如果已经初始化过 git，只需执行："
 echo "    git add ."
-echo "    git commit -m 'Update: GILOK website'"
+echo "    git commit -m 'Update: JUNHAI website'"
 echo "    git push"
 echo ""
 
@@ -49,7 +49,7 @@ echo ""
 echo "  1. 访问 https://vercel.com"
 echo "  2. 用 GitHub 账号登录"
 echo "  3. 点击 'Add New...' → 'Project'"
-echo "  4. 选择 'gilok-website' 仓库"
+echo "  4. 选择 'junhai-website' 仓库"
 echo "  5. 点击 'Deploy' 按钮"
 echo ""
 echo "  完成！你的网站将在 2-3 分钟内上线"
@@ -85,3 +85,4 @@ echo "  - PROJECT_COMPLETION_REPORT.md: 项目完成报告"
 echo ""
 echo "🎉 准备好了！现在就开始部署吧！"
 echo ""
+

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,11 +18,11 @@ export async function GET(request: NextRequest) {
         break;
       case 'linkedin':
         // LinkedIn profile
-        data = encodeURIComponent('https://linkedin.com/company/gilok');
+        data = encodeURIComponent('https://linkedin.com/company/junhai');
         break;
       case 'wechat':
         // WeChat QR code (would need WeChat ID)
-        data = encodeURIComponent('gilok_sales');
+        data = encodeURIComponent('junhai_sales');
         break;
       default:
         return NextResponse.json(
@@ -74,11 +74,11 @@ export async function POST(request: NextRequest) {
     }
 
     if (type === 'all' || type === 'linkedin') {
-      qrCodes.linkedin = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent('https://linkedin.com/company/gilok')}`;
+      qrCodes.linkedin = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent('https://linkedin.com/company/junhai')}`;
     }
 
     if (type === 'all' || type === 'wechat') {
-      qrCodes.wechat = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent('gilok_sales')}`;
+      qrCodes.wechat = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent('junhai_sales')}`;
     }
 
     return NextResponse.json({
@@ -86,8 +86,8 @@ export async function POST(request: NextRequest) {
       qrCodes,
       info: {
         whatsapp: '+86 138 0013 8889',
-        linkedin: 'https://linkedin.com/company/gilok',
-        wechat: 'gilok_sales',
+        linkedin: 'https://linkedin.com/company/junhai',
+        wechat: 'junhai_sales',
       },
     });
   } catch (error) {
@@ -98,3 +98,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

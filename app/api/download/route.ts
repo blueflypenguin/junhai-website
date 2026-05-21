@@ -25,10 +25,10 @@ function generateProductsCatalog() {
 
 function generatePriceList() {
   const content = `
-GILOK WHOLESALE - PRICE LIST
+JUNHAI WHOLESALE - PRICE LIST
 ================================
-Company: GILOK International Trading Co., Ltd.
-Website: https://gilok-wholesale.com
+Company: JUNHAI International Trading Co., Ltd.
+Website: https://junhai-wholesale.com
 
 PRODUCT CATALOG (${products.length} SKUs)
 ================================
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 
     if (type === 'catalog') {
       const csv = generateProductsCatalog();
-      const filename = `GILOK_Product_Catalog_${new Date().toISOString().split('T')[0]}.csv`;
+      const filename = `JUNHAI_Product_Catalog_${new Date().toISOString().split('T')[0]}.csv`;
       return new NextResponse(csv, {
         headers: {
           'Content-Type': 'text/csv; charset=utf-8',
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
       });
     } else if (type === 'pricelist') {
       const pricelist = generatePriceList();
-      const filename = `GILOK_Price_List_${new Date().toISOString().split('T')[0]}.txt`;
+      const filename = `JUNHAI_Price_List_${new Date().toISOString().split('T')[0]}.txt`;
       return new NextResponse(pricelist, {
         headers: {
           'Content-Type': 'text/plain; charset=utf-8',
@@ -78,3 +78,4 @@ export async function POST(request: NextRequest) {
   }
   return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
 }
+

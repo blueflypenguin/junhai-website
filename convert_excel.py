@@ -3,7 +3,7 @@ import json
 import os
 
 def extract_data():
-    file_path = r'd:\外贸客户全自动开发\GILOK分销.xlsx'
+    file_path = r'd:\外贸客户全自动开发\JUNHAI分销.xlsx'
     output_path = r'd:\外贸客户全自动开发\products_data.json'
     
     if not os.path.exists(file_path):
@@ -65,3 +65,4 @@ def extract_data():
 
 if __name__ == '__main__':
     extract_data()
+

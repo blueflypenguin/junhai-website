@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -78,7 +78,7 @@ export default function ContactPage() {
           <div className="bg-white p-8 rounded-xl border border-gray-200 text-center hover:shadow-lg transition">
             <Mail className="w-12 h-12 text-rose-600 mx-auto mb-4" />
             <h3 className="text-lg font-bold text-gray-900 mb-2">电子邮件</h3>
-            <p className="text-gray-600 mb-2">sales@gilok.com</p>
+            <p className="text-gray-600 mb-2">export@junhaicorp.com</p>
             <p className="text-gray-600 text-sm">通常在 2 小时内回复</p>
           </div>
 
@@ -94,7 +94,7 @@ export default function ContactPage() {
           <div className="bg-white p-8 rounded-xl border border-gray-200 text-center hover:shadow-lg transition">
             <Smartphone className="w-12 h-12 text-rose-600 mx-auto mb-4" />
             <h3 className="text-lg font-bold text-gray-900 mb-2">Telegram</h3>
-            <p className="text-gray-600 mb-2">@gilok_sales</p>
+            <p className="text-gray-600 mb-2">@junhai_sales</p>
             <p className="text-gray-600 text-sm">支持中文和英文</p>
           </div>
         </div>
@@ -289,3 +289,4 @@ export default function ContactPage() {
     </div>
   );
 }
+

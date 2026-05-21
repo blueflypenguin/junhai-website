@@ -1,28 +1,28 @@
-// 网站配置
+﻿// 网站配置
 export const siteConfig = {
-  name: 'GILOK',
-  title: 'GILOK - 全球 B2B 批发平台',
+  name: 'JUNHAI',
+  title: 'JUNHAI - 全球 B2B 批发平台',
   description: '为全球分销商、零售商提供 500+ 优质产品，超低 MOQ，国际认证，隐蔽包装。',
-  url: 'https://gilok-wholesale.com',
+  url: 'https://junhai-wholesale.com',
   
   // 联系信息
   contact: {
-    email: 'sales@gilok.com',
+    email: 'export@junhaicorp.com',
     whatsapp: '+86 138 0013 8889',
-    telegram: '@gilok_sales',
+    telegram: '@junhai_sales',
     workHours: '周一至周五 09:00 - 18:00 (中国时间)',
   },
 
   // 社交媒体
   social: {
-    linkedin: 'https://linkedin.com/company/gilok',
-    facebook: 'https://facebook.com/gilok',
-    instagram: 'https://instagram.com/gilok_wholesale',
+    linkedin: 'https://linkedin.com/company/junhai',
+    facebook: 'https://facebook.com/junhai',
+    instagram: 'https://instagram.com/junhai_wholesale',
   },
 
   // 公司信息
   company: {
-    name: 'GILOK International Trading Co., Ltd.',
+    name: 'JUNHAI International Trading Co., Ltd.',
     founded: 2015,
     headquarters: 'China',
     employees: '50+',
@@ -52,3 +52,4 @@ export const siteConfig = {
     '快速物流',
   ],
 };
+
