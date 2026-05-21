@@ -57,8 +57,20 @@ export default function ContactPage() {
           <h2 className="mb-4 text-xl font-bold text-slate-900">Contact Channels</h2>
           <div className="space-y-4 text-sm text-slate-600">
             <p className="flex items-center gap-2"><Mail size={16} /> {siteConfig.contact.email}</p>
-            <p className="flex items-center gap-2"><Phone size={16} /> {siteConfig.contact.whatsapp}</p>
+            <p className="flex items-center gap-2"><Phone size={16} /> {siteConfig.contact.phone}</p>
             <p className="flex items-center gap-2"><MessageCircle size={16} /> {siteConfig.contact.whatsapp}</p>
+            <p className="break-all">LinkedIn: <a href={siteConfig.social.linkedin} target="_blank" rel="noreferrer" className="font-semibold text-slate-900 underline">{siteConfig.social.linkedin}</a></p>
+          </div>
+
+          <div className="mt-6 space-y-4">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">WhatsApp QR</p>
+              <img src="/branding/whatsapp-qr.jpg" alt="WhatsApp QR Code" className="w-full rounded-xl border border-slate-200" />
+            </div>
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Business Card</p>
+              <img src="/branding/business-card.png" alt="Junhai Business Card" className="w-full rounded-xl border border-slate-200" />
+            </div>
           </div>
         </div>
 

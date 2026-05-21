@@ -8,14 +8,15 @@ export const siteConfig = {
   // 联系信息
   contact: {
     email: 'export@junhaicorp.com',
-    whatsapp: '+86 138 0013 8889',
+    phone: '+86 15017742798',
+    whatsapp: '+86 15017742798',
     telegram: '@junhai_sales',
     workHours: '周一至周五 09:00 - 18:00 (中国时间)',
   },
 
   // 社交媒体
   social: {
-    linkedin: 'https://linkedin.com/company/junhai',
+    linkedin: 'https://www.linkedin.com/in/clint-huang-1aa4a5352',
     facebook: 'https://facebook.com/junhai',
     instagram: 'https://instagram.com/junhai_wholesale',
   },

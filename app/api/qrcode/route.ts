@@ -14,11 +14,11 @@ export async function GET(request: NextRequest) {
     switch (type) {
       case 'whatsapp':
         // WhatsApp contact link
-        data = encodeURIComponent('+8613800138889'); // Replace with actual number
+        data = encodeURIComponent('+8615017742798');
         break;
       case 'linkedin':
         // LinkedIn profile
-        data = encodeURIComponent('https://linkedin.com/company/junhai');
+        data = encodeURIComponent('https://www.linkedin.com/in/clint-huang-1aa4a5352');
         break;
       case 'wechat':
         // WeChat QR code (would need WeChat ID)
@@ -70,11 +70,11 @@ export async function POST(request: NextRequest) {
     const qrCodes: { [key: string]: string } = {};
 
     if (type === 'all' || type === 'whatsapp') {
-      qrCodes.whatsapp = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent('+8613800138889')}`;
+      qrCodes.whatsapp = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent('+8615017742798')}`;
     }
 
     if (type === 'all' || type === 'linkedin') {
-      qrCodes.linkedin = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent('https://linkedin.com/company/junhai')}`;
+      qrCodes.linkedin = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent('https://www.linkedin.com/in/clint-huang-1aa4a5352')}`;
     }
 
     if (type === 'all' || type === 'wechat') {
@@ -85,8 +85,8 @@ export async function POST(request: NextRequest) {
       success: true,
       qrCodes,
       info: {
-        whatsapp: '+86 138 0013 8889',
-        linkedin: 'https://linkedin.com/company/junhai',
+        whatsapp: '+86 15017742798',
+        linkedin: 'https://www.linkedin.com/in/clint-huang-1aa4a5352',
         wechat: 'junhai_sales',
       },
     });
