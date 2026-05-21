@@ -12,13 +12,13 @@ export default function AboutPage() {
           B2B Export Supply | Foshan Junhai Trading Co., Ltd.
         </div>
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3" aria-label="Go to JUNHAI homepage">
             <img src="/branding/junhai-logo.jpg" alt="Junhai Logo" className="h-12 w-12 rounded-full object-cover" />
             <div>
               <p className="text-lg font-bold tracking-wide">JUNHAI</p>
               <p className="text-xs uppercase text-slate-500">JUNHAI Wholesale Division</p>
             </div>
-          </div>
+          </Link>
           <div className="hidden items-center gap-8 md:flex">
             <Link href="/products" className="text-sm font-medium text-slate-600 hover:text-slate-900">Products</Link>
             <Link href="/about" className="text-sm font-semibold text-slate-900">Company</Link>
