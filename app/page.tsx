@@ -133,8 +133,12 @@ const homeCopy = {
     whatsapp: 'WhatsApp',
     productLinesTag: 'Product Lines',
     productLinesTitle: 'Wholesale Products for Different Markets',
-    productLinesDesc: 'Keep the original 4 visuals, and use the 9-category row below as quick entry to the product catalog page.',
+    productLinesDesc: '',
     quickEntry: '9 Categories Quick Entry',
+    factoryMediaTag: 'Factory Media',
+    factoryMediaTitle: 'Factory Videos & Real-Scene Gallery',
+    factoryMediaDesc: 'Homepage displays factory video. Click the button to open the real factory gallery.',
+    factoryMediaButton: 'View Factory Gallery',
   },
   zh: {
     topLineLeft: '面向进口商、分销商和品牌客户的 B2B 批发供应。',
@@ -148,8 +152,12 @@ const homeCopy = {
     whatsapp: 'WhatsApp',
     productLinesTag: '产品线',
     productLinesTitle: '面向不同市场的批发产品',
-    productLinesDesc: '保留上方 4 张主图，下方 9 分类入口用于快速跳转产品目录。',
+    productLinesDesc: '',
     quickEntry: '9 大分类快速入口',
+    factoryMediaTag: '工厂媒体',
+    factoryMediaTitle: '工厂视频与实景图库',
+    factoryMediaDesc: '首页展示工厂视频，点击按钮进入工厂实景图素材库。',
+    factoryMediaButton: '查看工厂实景图库',
   },
 };
 
@@ -358,7 +366,7 @@ export default function Home() {
           <div className="relative">
             <div className="rounded-[2rem] border border-white/15 bg-white/10 shadow-2xl p-4 md:p-6 backdrop-blur-sm">
               <div className="rounded-[1.5rem] bg-slate-900 border border-white/10 overflow-hidden">
-                <img src="/images/docx-template/image2.png" alt="Hero right visual" className="h-80 md:h-[430px] w-full bg-black object-contain" />
+                <img src="/images/docx-template/image2.png" alt="Hero right visual" className="h-80 md:h-[430px] w-full object-contain bg-slate-950" />
                 <div className="grid grid-cols-3 border-t border-white/10">
                   <div className="p-4 border-r border-white/10">
                     <div className="text-2xl font-black">24h</div>
@@ -427,15 +435,17 @@ export default function Home() {
             <p className="text-sm uppercase tracking-[0.25em] text-slate-400">{t.productLinesTag}</p>
             <h2 className="mt-3 text-3xl md:text-5xl font-black">{t.productLinesTitle}</h2>
           </div>
-          <p className="text-slate-300 max-w-xl leading-relaxed">
-            {t.productLinesDesc}
-          </p>
+          {t.productLinesDesc ? (
+            <p className="text-slate-300 max-w-xl leading-relaxed">
+              {t.productLinesDesc}
+            </p>
+          ) : null}
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           {legacyProductVisuals.map((item) => (
             <div key={item.titleEn} className="rounded-[1.5rem] bg-white/[0.06] border border-white/10 overflow-hidden hover:bg-white/[0.09] transition">
-              <div className="h-44">
-                <img src={item.visual} alt={lang === 'zh' ? item.titleZh : item.titleEn} className="h-full w-full object-cover" />
+              <div className="h-52 bg-slate-900 flex items-center justify-center p-2">
+                <img src={item.visual} alt={lang === 'zh' ? item.titleZh : item.titleEn} className="h-full w-full object-contain" />
               </div>
               <div className="p-5">
                 <h3 className="text-xl font-bold">{lang === 'zh' ? item.titleZh : item.titleEn}</h3>
@@ -450,8 +460,8 @@ export default function Home() {
           <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-3">
           {categoryCards.map((cat) => (
             <div key={cat.slug} className="rounded-xl bg-white/[0.05] border border-white/10 overflow-hidden hover:bg-white/[0.09] transition">
-              <Link href={`/products?category=${cat.slug}`} className="block h-24">
-                <img src={categoryCover[cat.slug]} alt={lang === 'zh' ? cat.titleZh : cat.titleEn} className="h-full w-full object-cover" />
+              <Link href={`/products?category=${cat.slug}`} className="block h-28 bg-slate-900 flex items-center justify-center p-1.5">
+                <img src={categoryCover[cat.slug]} alt={lang === 'zh' ? cat.titleZh : cat.titleEn} className="h-full w-full object-contain" />
               </Link>
               <div className="p-2.5">
                 <Link href={`/products?category=${cat.slug}`} className="text-xs font-semibold leading-tight hover:underline line-clamp-2 block">
@@ -490,8 +500,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="oem" className="max-w-7xl mx-auto px-4 md:px-8 py-20 grid lg:grid-cols-2 gap-12 items-center">
-        <div>
+      <section id="oem" className="max-w-7xl mx-auto px-4 md:px-8 py-20">
+        <div className="max-w-4xl">
           <p className="text-sm uppercase tracking-[0.25em] text-slate-400">OEM / ODM</p>
           <h2 className="mt-3 text-3xl md:text-5xl font-black">Custom Doll Solutions for Your Brand</h2>
           <p className="mt-6 text-slate-300 leading-relaxed text-lg">
@@ -514,9 +524,13 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <div className="rounded-[2rem] bg-white/[0.06] border border-white/10 p-6">
-          <div className="rounded-[1.5rem] overflow-hidden border border-white/10 bg-black">
-            <img src="/images/docx-template/image9.png" alt="OEM ODM configuration solutions" className="w-full h-[420px] object-cover" />
+
+        <div className="mt-10 rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.09] via-white/[0.04] to-sky-400/[0.08] p-4 md:p-6 shadow-[0_20px_60px_-30px_rgba(56,189,248,0.45)]">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-sky-200/30 bg-sky-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-sky-100">
+            OEM / ODM Preview
+          </div>
+          <div className="rounded-[1.5rem] overflow-hidden border border-white/10 bg-black/60 backdrop-blur-sm">
+            <img src="/images/docx-template/image9.png" alt="OEM ODM configuration solutions" className="w-full max-h-[560px] object-contain bg-slate-950/80" />
           </div>
         </div>
       </section>
@@ -532,8 +546,8 @@ export default function Home() {
         <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-5">
           {factoryCapabilities.map((item) => (
             <div key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.05] overflow-hidden">
-              <div className="h-48 bg-slate-900">
-                <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
+              <div className="h-52 bg-slate-900 flex items-center justify-center p-2">
+                <img src={item.image} alt={item.title} className="h-full w-full object-contain" />
               </div>
               <div className="p-5">
                 <h3 className="text-xl font-bold">{item.title}</h3>
@@ -548,12 +562,12 @@ export default function Home() {
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 md:p-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6">
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Factory Media</p>
-              <h2 className="mt-3 text-3xl md:text-4xl font-black">工厂实景视频与图库</h2>
-              <p className="mt-3 text-slate-300">首页展示工厂视频，点击按钮进入工厂实景图素材库。</p>
+              <p className="text-sm uppercase tracking-[0.25em] text-slate-400">{t.factoryMediaTag}</p>
+              <h2 className="mt-3 text-3xl md:text-4xl font-black">{t.factoryMediaTitle}</h2>
+              <p className="mt-3 text-slate-300">{t.factoryMediaDesc}</p>
             </div>
             <Link href="/factory-gallery" className="rounded-full border border-white/20 px-6 py-3 font-semibold inline-flex items-center justify-center gap-2 hover:bg-white/10">
-              查看工厂实景图库 <ArrowRight size={16} />
+              {t.factoryMediaButton} <ArrowRight size={16} />
             </Link>
           </div>
           <div className="rounded-2xl overflow-hidden border border-white/10 bg-black">
@@ -732,7 +746,7 @@ export default function Home() {
                   onClick={() => setPreviewImage({ src: '/branding/business-card.png', alt: 'Junhai Business Card' })}
                   className="w-full max-w-[320px] rounded-xl border border-slate-300 cursor-zoom-in"
                 >
-                  <img src="/branding/business-card.png" alt="Junhai Business Card" className="w-full rounded-xl object-cover" />
+                  <img src="/branding/business-card.png" alt="Junhai Business Card" className="w-full rounded-xl object-contain bg-white" />
                 </button>
               </div>
             </div>

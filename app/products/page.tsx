@@ -190,8 +190,8 @@ export default function ProductsPage() {
 
                       return (
                         <div key={product.id} className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 transition hover:bg-slate-900">
-                          <div className="h-44 bg-slate-800">
-                            <img src={imageSrc} alt={productName} className="h-full w-full object-cover" />
+                          <div className="h-52 bg-slate-900 flex items-center justify-center p-2">
+                            <img src={imageSrc} alt={productName} className="h-full w-full object-contain" />
                           </div>
                           <div className="p-4">
                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">SKU {product.id}</p>

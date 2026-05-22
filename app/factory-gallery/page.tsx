@@ -30,8 +30,8 @@ export default function FactoryGalleryPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {FACTORY_IMAGES.map((item) => (
             <div key={item.src} className="rounded-2xl overflow-hidden border border-white/10 bg-white/[0.05]">
-              <div className="h-52 bg-slate-900">
-                <img src={item.src} alt={item.title} className="h-full w-full object-cover" />
+              <div className="h-52 bg-slate-900 flex items-center justify-center p-2">
+                <img src={item.src} alt={item.title} className="h-full w-full object-contain" />
               </div>
               <div className="p-4">
                 <p className="font-semibold text-sm">{item.title}</p>

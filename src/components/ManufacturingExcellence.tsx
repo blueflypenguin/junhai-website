@@ -41,7 +41,7 @@ export default function ManufacturingExcellence({ className = '', compact = fals
         <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {blocks.map((item) => (
             <div key={item.title} className={compact ? 'rounded-xl border border-white/20 bg-white/5 p-4' : 'rounded-2xl border border-slate-200 bg-slate-50 p-5'}>
-              <img src={item.image} alt={item.title} className="mb-3 h-32 w-full rounded-xl object-cover" />
+              <img src={item.image} alt={item.title} className="mb-3 h-36 w-full rounded-xl object-contain bg-slate-900/20 p-1" />
               <p className={compact ? 'text-base font-bold text-white' : 'text-lg font-bold text-slate-900'}>{item.title}</p>
               <p className={compact ? 'mt-2 text-sm text-slate-200' : 'mt-2 text-sm text-slate-600'}>{item.desc}</p>
             </div>
