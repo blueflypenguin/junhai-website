@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -19,7 +19,7 @@ import {
   PlayCircle,
 } from 'lucide-react';
 import { siteConfig } from '../src/config/site';
-import LanguageSwitcher from '../src/components/LanguageSwitcher';
+import LanguageSwitcher, { getBrowserLanguage, SiteLanguage } from '../src/components/LanguageSwitcher';
 import catalogProducts from '../src/data/catalogProducts.json';
 
 type CatalogProduct = {
@@ -91,26 +91,67 @@ const categoryCards = [
 
 const legacyProductVisuals = [
   {
-    title: 'Silicone Dolls',
-    desc: 'Premium models for distributors and private-label adult product brands.',
+    titleEn: 'Silicone Dolls',
+    titleZh: '硅胶娃娃',
+    descEn: 'Premium models for distributors and private-label adult product brands.',
+    descZh: '面向分销商与品牌客户的高品质产品。',
     visual: '/images/docx-template/image4.png',
   },
   {
-    title: 'TPE Dolls',
-    desc: 'Cost-effective options for bulk wholesale and market testing.',
+    titleEn: 'TPE Dolls',
+    titleZh: 'TPE 娃娃',
+    descEn: 'Cost-effective options for bulk wholesale and market testing.',
+    descZh: '适合批量采购与市场测试的高性价比选项。',
     visual: '/images/docx-template/image5.png',
   },
   {
-    title: 'Torso & Mini Dolls',
-    desc: 'Compact products with lower shipping cost and flexible trial orders.',
+    titleEn: 'Torso & Mini Dolls',
+    titleZh: '半身与迷你款',
+    descEn: 'Compact products with lower shipping cost and flexible trial orders.',
+    descZh: '体积更小、运费更低，适合灵活试单。',
     visual: '/images/docx-template/image6.png',
   },
   {
-    title: 'Custom OEM Models',
-    desc: 'Face, body, skin tone, makeup, packaging and logo customization.',
+    titleEn: 'Custom OEM Models',
+    titleZh: 'OEM 定制款',
+    descEn: 'Face, body, skin tone, makeup, packaging and logo customization.',
+    descZh: '支持脸型、体型、肤色、妆容、包装与 logo 定制。',
     visual: '/images/docx-template/image7.png',
   },
 ];
+
+const homeCopy = {
+  en: {
+    topLineLeft: 'B2B wholesale supply for importers, distributors and private-label adult product brands.',
+    topLineRight: 'Fast quote · OEM/ODM · Discreet global shipping',
+    companyCardTitle: 'JUNHAI Business Card',
+    companyCardSub: 'Factory + Trading integrated service for global B2B buyers',
+    companyName: 'Company Name',
+    companyType: 'Company Type',
+    companyTypeValue: 'Integrated Factory + Trading',
+    email: 'Email',
+    whatsapp: 'WhatsApp',
+    productLinesTag: 'Product Lines',
+    productLinesTitle: 'Wholesale Products for Different Markets',
+    productLinesDesc: 'Keep the original 4 visuals, and use the 9-category row below as quick entry to the product catalog page.',
+    quickEntry: '9 Categories Quick Entry',
+  },
+  zh: {
+    topLineLeft: '面向进口商、分销商和品牌客户的 B2B 批发供应。',
+    topLineRight: '快速报价 · OEM/ODM · 隐私物流',
+    companyCardTitle: 'JUNHAI 企业名片',
+    companyCardSub: '工厂 + 外贸一体化服务，面向全球 B2B 买家',
+    companyName: '公司名称',
+    companyType: '公司类型',
+    companyTypeValue: '工贸一体化工厂',
+    email: '邮箱',
+    whatsapp: 'WhatsApp',
+    productLinesTag: '产品线',
+    productLinesTitle: '面向不同市场的批发产品',
+    productLinesDesc: '保留上方 4 张主图，下方 9 分类入口用于快速跳转产品目录。',
+    quickEntry: '9 大分类快速入口',
+  },
+};
 
 const categoryToZh: Record<string, string> = {
   'full-body-silicone-dolls': '全身定制硅胶娃娃',
@@ -209,8 +250,32 @@ const faq = [
 ];
 
 export default function Home() {
+  const [lang, setLang] = useState<SiteLanguage>('en');
+  const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
   const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
   const catalogItems = catalogProducts as CatalogProduct[];
+  const t = homeCopy[lang];
+
+  useEffect(() => {
+    setLang(getBrowserLanguage());
+
+    const onLangChange = (event: Event) => {
+      const next = (event as CustomEvent<SiteLanguage>).detail;
+      if (next) setLang(next);
+    };
+
+    window.addEventListener('site-language-change', onLangChange as EventListener);
+    return () => window.removeEventListener('site-language-change', onLangChange as EventListener);
+  }, []);
+
+  useEffect(() => {
+    const onEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setPreviewImage(null);
+    };
+
+    window.addEventListener('keydown', onEsc);
+    return () => window.removeEventListener('keydown', onEsc);
+  }, []);
 
   const categoryCover: Record<string, string> = {};
   for (const card of categoryCards) {
@@ -222,8 +287,8 @@ export default function Home() {
     <div className="min-h-screen bg-slate-950 text-white">
       <div className="border-b border-white/10 bg-slate-900/80 text-xs md:text-sm text-slate-300">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 flex flex-col md:flex-row gap-2 md:items-center md:justify-between">
-          <span>B2B wholesale supply for importers, distributors and private-label adult product brands.</span>
-          <span className="text-slate-400">Fast quote · OEM/ODM · Discreet global shipping</span>
+          <span>{t.topLineLeft}</span>
+          <span className="text-slate-400">{t.topLineRight}</span>
         </div>
       </div>
 
@@ -331,25 +396,25 @@ export default function Home() {
               <Building2 size={20} />
             </div>
             <div>
-              <h2 className="text-2xl font-black">JUNHAI 企业名片</h2>
-              <p className="text-sm text-slate-300">Factory + Trading integrated service for global B2B buyers</p>
+              <h2 className="text-2xl font-black">{t.companyCardTitle}</h2>
+              <p className="text-sm text-slate-300">{t.companyCardSub}</p>
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
             <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
-              <p className="text-slate-400">公司名称</p>
+              <p className="text-slate-400">{t.companyName}</p>
               <p className="mt-1 font-semibold">{siteConfig.company.name}</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
-              <p className="text-slate-400">公司类型</p>
-              <p className="mt-1 font-semibold">工贸一体化工厂</p>
+              <p className="text-slate-400">{t.companyType}</p>
+              <p className="mt-1 font-semibold">{t.companyTypeValue}</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
-              <p className="text-slate-400">邮箱</p>
+              <p className="text-slate-400">{t.email}</p>
               <p className="mt-1 font-semibold">{siteConfig.contact.email}</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
-              <p className="text-slate-400">WhatsApp</p>
+              <p className="text-slate-400">{t.whatsapp}</p>
               <p className="mt-1 font-semibold">{siteConfig.contact.whatsapp}</p>
             </div>
           </div>
@@ -359,38 +424,38 @@ export default function Home() {
       <section id="products" className="max-w-7xl mx-auto px-4 md:px-8 py-20">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <div>
-            <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Product Lines</p>
-            <h2 className="mt-3 text-3xl md:text-5xl font-black">Wholesale Products for Different Markets</h2>
+            <p className="text-sm uppercase tracking-[0.25em] text-slate-400">{t.productLinesTag}</p>
+            <h2 className="mt-3 text-3xl md:text-5xl font-black">{t.productLinesTitle}</h2>
           </div>
           <p className="text-slate-300 max-w-xl leading-relaxed">
-            Keep the original 4 visuals, and use the 9-category row below as quick entry to the product catalog page.
+            {t.productLinesDesc}
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           {legacyProductVisuals.map((item) => (
-            <div key={item.title} className="rounded-[1.5rem] bg-white/[0.06] border border-white/10 overflow-hidden hover:bg-white/[0.09] transition">
+            <div key={item.titleEn} className="rounded-[1.5rem] bg-white/[0.06] border border-white/10 overflow-hidden hover:bg-white/[0.09] transition">
               <div className="h-44">
-                <img src={item.visual} alt={item.title} className="h-full w-full object-cover" />
+                <img src={item.visual} alt={lang === 'zh' ? item.titleZh : item.titleEn} className="h-full w-full object-cover" />
               </div>
               <div className="p-5">
-                <h3 className="text-xl font-bold">{item.title}</h3>
-                <p className="mt-3 text-sm text-slate-300 leading-relaxed">{item.desc}</p>
+                <h3 className="text-xl font-bold">{lang === 'zh' ? item.titleZh : item.titleEn}</h3>
+                <p className="mt-3 text-sm text-slate-300 leading-relaxed">{lang === 'zh' ? item.descZh : item.descEn}</p>
               </div>
             </div>
           ))}
         </div>
 
         <div className="mt-10">
-          <p className="text-sm text-slate-300 mb-4">9 Categories Quick Entry</p>
+          <p className="text-sm text-slate-300 mb-4">{t.quickEntry}</p>
           <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-3">
           {categoryCards.map((cat) => (
             <div key={cat.slug} className="rounded-xl bg-white/[0.05] border border-white/10 overflow-hidden hover:bg-white/[0.09] transition">
               <Link href={`/products?category=${cat.slug}`} className="block h-24">
-                <img src={categoryCover[cat.slug]} alt={cat.titleZh} className="h-full w-full object-cover" />
+                <img src={categoryCover[cat.slug]} alt={lang === 'zh' ? cat.titleZh : cat.titleEn} className="h-full w-full object-cover" />
               </Link>
               <div className="p-2.5">
                 <Link href={`/products?category=${cat.slug}`} className="text-xs font-semibold leading-tight hover:underline line-clamp-2 block">
-                  {cat.titleZh}
+                  {lang === 'zh' ? cat.titleZh : cat.titleEn}
                 </Link>
               </div>
             </div>
@@ -652,18 +717,48 @@ export default function Home() {
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">WhatsApp QR Code</p>
-                <div className="w-full max-w-[280px] aspect-square rounded-xl border border-slate-300 bg-white p-2">
+                <button
+                  type="button"
+                  onClick={() => setPreviewImage({ src: '/branding/whatsapp-qr.jpg', alt: 'WhatsApp QR Code' })}
+                  className="w-full max-w-[280px] aspect-square rounded-xl border border-slate-300 bg-white p-2 cursor-zoom-in"
+                >
                   <img src="/branding/whatsapp-qr.jpg" alt="WhatsApp QR Code" className="w-full h-full object-contain" />
-                </div>
+                </button>
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Junhai Business Card</p>
-                <img src="/branding/business-card.png" alt="Junhai Business Card" className="w-full max-w-[320px] rounded-xl border border-slate-300 object-cover" />
+                <button
+                  type="button"
+                  onClick={() => setPreviewImage({ src: '/branding/business-card.png', alt: 'Junhai Business Card' })}
+                  className="w-full max-w-[320px] rounded-xl border border-slate-300 cursor-zoom-in"
+                >
+                  <img src="/branding/business-card.png" alt="Junhai Business Card" className="w-full rounded-xl object-cover" />
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div className="relative w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              onClick={() => setPreviewImage(null)}
+              className="absolute -top-10 right-0 rounded-full border border-white/30 px-3 py-1.5 text-sm text-white hover:bg-white/10"
+            >
+              Close
+            </button>
+            <div className="rounded-2xl bg-white p-3">
+              <img src={previewImage.src} alt={previewImage.alt} className="w-full max-h-[82vh] object-contain rounded-xl" />
+            </div>
+          </div>
+        </div>
+      )}
 
       <footer className="border-t border-white/10 bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 flex flex-col md:flex-row gap-6 md:items-center md:justify-between text-sm text-slate-400">
