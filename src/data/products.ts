@@ -14,6 +14,42 @@ export interface Product {
   inStock?: boolean;
 }
 
+export type ProductLang = 'en' | 'zh' | 'es';
+
+export interface LocalizedProductCopy {
+  name: string;
+  description: string;
+}
+
+export function getLocalizedProductCopy(product: Product, lang: ProductLang): LocalizedProductCopy {
+  if (lang === 'zh') {
+    return { name: product.name, description: product.description };
+  }
+
+  const typeByCategory: Record<string, { en: string; es: string }> = {
+    'personal-wellness': { en: 'Adult Wellness Unit', es: 'Unidad de Bienestar Adulto' },
+    'smart-wellness': { en: 'Smart Adult Wellness Unit', es: 'Unidad Inteligente de Bienestar Adulto' },
+    dolls: { en: 'Realistic Doll Product', es: 'Producto de Muneca Realista' },
+    accessories: { en: 'Accessory Product', es: 'Producto de Accesorio' },
+    couples: { en: 'Couples Product', es: 'Producto para Parejas' },
+    premium: { en: 'Premium Product', es: 'Producto Premium' },
+    travel: { en: 'Travel Kit Product', es: 'Producto Kit de Viaje' },
+  };
+
+  const typeLabel = typeByCategory[product.category] || { en: 'Wholesale Product', es: 'Producto Mayorista' };
+  if (lang === 'en') {
+    return {
+      name: `Model ${product.id} ${typeLabel.en}`,
+      description: 'Factory-direct wholesale item with discreet packaging, compliant materials, and stable export supply.',
+    };
+  }
+
+  return {
+    name: `Modelo ${product.id} ${typeLabel.es}`,
+    description: 'Producto mayorista directo de fabrica con empaque discreto, materiales conformes y suministro exportable estable.',
+  };
+}
+
 export const products: Product[] = [
   {
     id: 'TM1',
@@ -443,7 +479,7 @@ export const products: Product[] = [
     weight: '550g',
     price: 16.2,
     moq: '30件',
-    category: 'personal-wellness',
+    category: 'dolls',
     image: '/images/products/tm31.jpg',
     certified: ['CE认证', 'RoHS'],
     inStock: true,
@@ -457,7 +493,7 @@ export const products: Product[] = [
     weight: '750g',
     price: 20,
     moq: '30件',
-    category: 'personal-wellness',
+    category: 'dolls',
     image: '/images/products/tm32.jpg',
     certified: ['CE认证', 'RoHS', 'FDA'],
     inStock: true,
@@ -545,14 +581,20 @@ export const products: Product[] = [
   },
 ];
 
-export const categories = [
-  { id: 'personal-wellness', name: '个人护理', count: 35 },
-  { id: 'smart-wellness', name: '智能系列', count: 1 },
-  { id: 'accessories', name: '配件产品', count: 0 },
-  { id: 'couples', name: '情侣系列', count: 0 },
-  { id: 'premium', name: '高级系列', count: 0 },
-  { id: 'travel', name: '旅行套装', count: 0 },
+const categoryDefs = [
+  { id: 'personal-wellness', name: '个人护理' },
+  { id: 'dolls', name: '全裸娃娃' },
+  { id: 'smart-wellness', name: '智能系列' },
+  { id: 'accessories', name: '配件产品' },
+  { id: 'couples', name: '情侣系列' },
+  { id: 'premium', name: '高级系列' },
+  { id: 'travel', name: '旅行套装' },
 ];
+
+export const categories = categoryDefs.map((c) => ({
+  ...c,
+  count: products.filter((p) => p.category === c.id).length,
+}));
 
 export const features = [
   '✓ 38款产品现货 - 快速发货',

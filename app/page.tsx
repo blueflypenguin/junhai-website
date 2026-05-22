@@ -13,8 +13,10 @@ import {
   ShieldCheck,
   Truck,
 } from 'lucide-react';
-import { products } from '../src/data/products';
+import { getLocalizedProductCopy, products, ProductLang } from '../src/data/products';
 import { siteConfig } from '../src/config/site';
+import LanguageSwitcher, { getBrowserLanguage } from '../src/components/LanguageSwitcher';
+import ManufacturingExcellence from '../src/components/ManufacturingExcellence';
 
 const capabilityCards = [
   { title: 'OEM / Private Label', value: 'Supported', desc: 'Packaging, insert cards, and barcode labeling.' },
@@ -32,12 +34,23 @@ const buyerFlow = [
 
 export default function Home() {
   const featuredProducts = products.slice(0, 6);
+  const [lang, setLang] = useState<ProductLang>('en');
   const [email, setEmail] = useState('');
   const [subscribing, setSubscribing] = useState(false);
   const [subscribeMessage, setSubscribeMessage] = useState('');
   const [downloading, setDownloading] = useState(false);
   const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
   const linkedinHref = siteConfig.social.linkedin;
+
+  React.useEffect(() => {
+    setLang(getBrowserLanguage());
+    const onLangChange = (event: Event) => {
+      const next = (event as CustomEvent<ProductLang>).detail;
+      if (next) setLang(next);
+    };
+    window.addEventListener('site-language-change', onLangChange as EventListener);
+    return () => window.removeEventListener('site-language-change', onLangChange as EventListener);
+  }, []);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,6 +111,7 @@ export default function Home() {
             <Link href="/products" className="text-sm font-medium text-slate-600 hover:text-slate-900">Products</Link>
             <Link href="/about" className="text-sm font-medium text-slate-600 hover:text-slate-900">Company</Link>
             <Link href="/contact" className="text-sm font-medium text-slate-600 hover:text-slate-900">Contact</Link>
+            <LanguageSwitcher />
             <a
               href={whatsappHref}
               target="_blank"
@@ -209,14 +223,18 @@ export default function Home() {
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {featuredProducts.map((product) => (
             <div key={product.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
+              {(() => {
+                const copy = getLocalizedProductCopy(product, lang);
+                return (
+                  <>
               <div className="mb-4 flex items-start justify-between">
                 <div>
                   <p className="text-xs text-slate-500">SKU {product.id}</p>
-                  <h3 className="mt-1 text-lg font-bold text-slate-900">{product.name}</h3>
+                  <h3 className="mt-1 text-lg font-bold text-slate-900">{copy.name}</h3>
                 </div>
                 <PackageCheck className="h-5 w-5 text-slate-500" />
               </div>
-              <p className="min-h-[48px] text-sm text-slate-600">{product.description}</p>
+              <p className="min-h-[48px] text-sm text-slate-600">{copy.description}</p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
                 {(product.certified ?? []).map((cert) => (
                   <span key={cert} className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">
@@ -226,18 +244,29 @@ export default function Home() {
               </div>
               <div className="mt-5 grid grid-cols-2 gap-2 rounded-lg bg-slate-50 p-3 text-sm">
                 <div>
-                  <p className="text-slate-500">Unit Price</p>
-                  <p className="font-bold text-slate-900">${product.price}</p>
+                  <p className="text-slate-500">Price</p>
+                  <p className="font-bold text-slate-900">Factory Direct - Unlock Wholesale Pricing</p>
                 </div>
                 <div>
                   <p className="text-slate-500">MOQ</p>
                   <p className="font-bold text-slate-900">{product.moq}</p>
                 </div>
               </div>
+              <Link
+                href="/contact#inquiry"
+                className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+              >
+                Get Latest Quote / Ask for MOQ
+              </Link>
+                  </>
+                );
+              })()}
             </div>
           ))}
         </div>
       </section>
+
+      <ManufacturingExcellence className="bg-white py-16" />
 
       <section className="bg-slate-900 py-16 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

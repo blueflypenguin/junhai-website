@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { Building2, Factory, Globe2, ShieldCheck } from 'lucide-react';
 import { siteConfig } from '../../src/config/site';
+import LanguageSwitcher from '../../src/components/LanguageSwitcher';
+import ManufacturingExcellence from '../../src/components/ManufacturingExcellence';
 
 export default function AboutPage() {
   const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
@@ -23,6 +25,7 @@ export default function AboutPage() {
             <Link href="/products" className="text-sm font-medium text-slate-600 hover:text-slate-900">Products</Link>
             <Link href="/about" className="text-sm font-semibold text-slate-900">Company</Link>
             <Link href="/contact" className="text-sm font-medium text-slate-600 hover:text-slate-900">Contact</Link>
+            <LanguageSwitcher />
             <a href={whatsappHref} target="_blank" rel="noreferrer" className="rounded-lg bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
               Get Price Sheet
             </a>
@@ -78,6 +81,8 @@ export default function AboutPage() {
           </ul>
         </div>
       </section>
+
+      <ManufacturingExcellence className="mx-auto max-w-7xl px-4 pb-14 sm:px-6 lg:px-8" compact />
     </div>
   );
 }

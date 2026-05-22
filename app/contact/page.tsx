@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Mail, MessageCircle, Phone, Send } from 'lucide-react';
 import { siteConfig } from '../../src/config/site';
+import LanguageSwitcher from '../../src/components/LanguageSwitcher';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
@@ -34,6 +35,7 @@ export default function ContactPage() {
             <Link href="/products" className="text-sm font-medium text-slate-600 hover:text-slate-900">Products</Link>
             <Link href="/about" className="text-sm font-medium text-slate-600 hover:text-slate-900">Company</Link>
             <Link href="/contact" className="text-sm font-semibold text-slate-900">Contact</Link>
+            <LanguageSwitcher />
             <a href={whatsappHref} target="_blank" rel="noreferrer" className="rounded-lg bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
               Get Price Sheet
             </a>
@@ -74,7 +76,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+        <div id="inquiry" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
           <h2 className="mb-4 text-xl font-bold text-slate-900">Business Inquiry</h2>
           <form onSubmit={onSubmit} className="grid gap-4 md:grid-cols-2">
             <input
