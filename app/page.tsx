@@ -273,6 +273,18 @@ const faq = [
 export default function Home() {
   const [lang, setLang] = useState<SiteLanguage>('en');
   const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
+  const [isSubmittingQuote, setIsSubmittingQuote] = useState(false);
+  const [quoteNotice, setQuoteNotice] = useState<{ type: 'success' | 'info' | 'error'; message: string } | null>(null);
+  const [quoteForm, setQuoteForm] = useState({
+    name: '',
+    company: '',
+    country: '',
+    email: '',
+    contact: '',
+    productType: '',
+    quantity: '',
+    requirements: '',
+  });
   const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
   const catalogItems = catalogProducts as CatalogProduct[];
   const t = homeCopy[lang];
@@ -303,6 +315,76 @@ export default function Home() {
     const found = catalogItems.find((item) => item.categoryZh === categoryToZh[card.slug] && item.image);
     categoryCover[card.slug] = found?.image || card.fallback;
   }
+
+  const buildQuoteMessage = () => {
+    const rows = [
+      'Hello JUNHAI, I want a wholesale quote.',
+      `Name: ${quoteForm.name || 'N/A'}`,
+      `Company: ${quoteForm.company || 'N/A'}`,
+      `Country: ${quoteForm.country || 'N/A'}`,
+      `Email: ${quoteForm.email || 'N/A'}`,
+      `Contact: ${quoteForm.contact || 'N/A'}`,
+      `Product Type: ${quoteForm.productType || 'N/A'}`,
+      `Estimated Quantity: ${quoteForm.quantity || 'N/A'}`,
+      `Requirements: ${quoteForm.requirements || 'N/A'}`,
+    ];
+    return rows.join('\n');
+  };
+
+  const openWhatsAppWithQuote = () => {
+    const text = encodeURIComponent(buildQuoteMessage());
+    window.open(`${whatsappHref}?text=${text}`, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleQuoteChange = (key: keyof typeof quoteForm, value: string) => {
+    setQuoteForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleQuoteSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setQuoteNotice(null);
+
+    if (!quoteForm.name.trim() && !quoteForm.company.trim()) {
+      setQuoteNotice({ type: 'error', message: 'Please provide your name or company before submitting.' });
+      return;
+    }
+
+    setIsSubmittingQuote(true);
+    try {
+      const response = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...quoteForm,
+          language: lang,
+        }),
+      });
+
+      if (response.ok) {
+        setQuoteNotice({ type: 'success', message: 'Quote request received. Our sales team will contact you soon.' });
+        setQuoteForm({
+          name: '',
+          company: '',
+          country: '',
+          email: '',
+          contact: '',
+          productType: '',
+          quantity: '',
+          requirements: '',
+        });
+        return;
+      }
+
+      // Backend unavailable or not configured: fallback to WhatsApp with prefilled quote details.
+      openWhatsAppWithQuote();
+      setQuoteNotice({ type: 'info', message: 'Form backend is temporarily unavailable. We opened WhatsApp with your quote details.' });
+    } catch {
+      openWhatsAppWithQuote();
+      setQuoteNotice({ type: 'info', message: 'Network issue detected. We opened WhatsApp so you can send your quote details directly.' });
+    } finally {
+      setIsSubmittingQuote(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -704,24 +786,29 @@ export default function Home() {
             </div>
           </div>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleQuoteSubmit}>
             <div className="grid md:grid-cols-2 gap-4">
-              <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Name" />
-              <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Company Name" />
+              <input value={quoteForm.name} onChange={(e) => handleQuoteChange('name', e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Name" />
+              <input value={quoteForm.company} onChange={(e) => handleQuoteChange('company', e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Company Name" />
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Country" />
-              <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Email" />
+              <input value={quoteForm.country} onChange={(e) => handleQuoteChange('country', e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Country" />
+              <input value={quoteForm.email} onChange={(e) => handleQuoteChange('email', e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Email" />
             </div>
-            <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="WhatsApp / LinkedIn" />
+            <input value={quoteForm.contact} onChange={(e) => handleQuoteChange('contact', e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="WhatsApp / LinkedIn" />
             <div className="grid md:grid-cols-2 gap-4">
-              <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Product Type" />
-              <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Estimated Quantity" />
+              <input value={quoteForm.productType} onChange={(e) => handleQuoteChange('productType', e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Product Type" />
+              <input value={quoteForm.quantity} onChange={(e) => handleQuoteChange('quantity', e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Estimated Quantity" />
             </div>
-            <textarea className="w-full min-h-32 rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="OEM/ODM needs, target price range, shipping country or other requirements" />
-            <button type="button" className="w-full rounded-full bg-slate-950 text-white py-4 font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition">
-              Get My Wholesale Quote <ArrowRight size={18} />
+            <textarea value={quoteForm.requirements} onChange={(e) => handleQuoteChange('requirements', e.target.value)} className="w-full min-h-32 rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="OEM/ODM needs, target price range, shipping country or other requirements" />
+            <button type="submit" disabled={isSubmittingQuote} className="w-full rounded-full bg-slate-950 text-white py-4 font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition disabled:opacity-60 disabled:cursor-not-allowed">
+              {isSubmittingQuote ? 'Submitting...' : 'Get My Wholesale Quote'} <ArrowRight size={18} />
             </button>
+            {quoteNotice ? (
+              <p className={`text-sm ${quoteNotice.type === 'success' ? 'text-emerald-600' : quoteNotice.type === 'error' ? 'text-red-600' : 'text-slate-600'}`}>
+                {quoteNotice.message}
+              </p>
+            ) : null}
           </form>
 
           <div className="mt-6 grid sm:grid-cols-2 gap-3 text-sm text-slate-600">
