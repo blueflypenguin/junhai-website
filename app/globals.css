@@ -27,6 +27,15 @@ body {
   font-family: var(--font-montserrat), "Segoe UI", sans-serif;
 }
 
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 h1,
 h2,
 h3,

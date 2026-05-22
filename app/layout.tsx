@@ -1,5 +1,6 @@
-﻿import type { Metadata } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Lato, Montserrat } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -27,6 +28,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +45,25 @@ export default function RootLayout({
       lang="en"
       className={`${montserrat.variable} ${lato.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Script id="viewport-fallback" strategy="beforeInteractive">
+          {`(function(){
+            try {
+              var expected = 'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover';
+              var meta = document.querySelector('meta[name="viewport"]');
+              if (!meta) {
+                meta = document.createElement('meta');
+                meta.setAttribute('name', 'viewport');
+                document.head.appendChild(meta);
+              }
+              if (meta.getAttribute('content') !== expected) {
+                meta.setAttribute('content', expected);
+              }
+            } catch (e) {}
+          })();`}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }
