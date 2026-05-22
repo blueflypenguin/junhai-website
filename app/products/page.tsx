@@ -1,203 +1,247 @@
-'use client';
+"use client";
 
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Filter, PackageCheck } from 'lucide-react';
-import { getLocalizedProductCopy, products, categories } from '../../src/data/products';
+import { MessageCircle, ExternalLink } from 'lucide-react';
+import LanguageSwitcher, { getBrowserLanguage, SiteLanguage } from '../../src/components/LanguageSwitcher';
 import { siteConfig } from '../../src/config/site';
-import { getBrowserLanguage, SiteLanguage } from '../../src/components/LanguageSwitcher';
-import SiteHeader from '../../src/components/SiteHeader';
-import SiteFooter from '../../src/components/SiteFooter';
+import catalogProducts from '../../src/data/catalogProducts.json';
 
-const CATEGORY_NAME: Record<string, { en: string; zh: string; es: string }> = {
-  'personal-wellness': { en: 'Personal Wellness', zh: '个人护理', es: 'Bienestar Personal' },
-  'smart-wellness': { en: 'Smart Wellness', zh: '智能系列', es: 'Bienestar Inteligente' },
-  accessories: { en: 'Accessories', zh: '配件产品', es: 'Accesorios' },
-  couples: { en: 'Couples', zh: '情侣系列', es: 'Parejas' },
-  premium: { en: 'Premium', zh: '高级系列', es: 'Premium' },
-  travel: { en: 'Travel Kits', zh: '旅行套装', es: 'Kits de Viaje' },
+type CatalogProduct = {
+  id: string;
+  categoryZh: string;
+  categoryEn: string;
+  nameZh: string;
+  nameEn: string;
+  priceWholesale: number | string;
+  image: string;
 };
 
-const ADULT_WARNING = {
-  en: 'Are you over 18? This section contains wholesale products for adults.',
-  zh: '您是否已满18岁？本分区展示的是成人用品批发产品。',
-  es: 'Tienes más de 18 años? Esta sección contiene productos para adultos al por mayor.',
+const CATEGORY_ORDER = [
+  { slug: 'full-body-silicone-dolls', zh: '全身定制硅胶娃娃', en: 'Full-Body Custom Silicone Dolls', fallbackImage: '/images/docx-template/image4.png' },
+  { slug: 'half-body-molded-dolls', zh: '半身倒模', en: 'Half-Body Molded Dolls', fallbackImage: '/images/docx-template/image5.png' },
+  { slug: 'masturbator-cups', zh: '飞机杯', en: 'Masturbator Cups', fallbackImage: '/images/catalog/masturbator-cups-01.png' },
+  { slug: 'female-toys', zh: '女性玩具', en: 'Female Toys', fallbackImage: '/images/catalog/female-toys-01.png' },
+  { slug: 'lingerie-costumes', zh: '情趣制服', en: 'Lingerie & Costumes', fallbackImage: '/images/catalog/lingerie-costumes-01.png' },
+  { slug: 'dildos', zh: '阳具', en: 'Dildos', fallbackImage: '/images/catalog/dildos-01.png' },
+  { slug: 'bdsm', zh: 'BDSM', en: 'BDSM', fallbackImage: '/images/catalog/bdsm-01.jpg' },
+  { slug: 'chastity-cages', zh: '贞操锁', en: 'Chastity Cages', fallbackImage: '/images/catalog/chastity-cages-01.png' },
+  { slug: 'condoms', zh: '安全套', en: 'Condoms', fallbackImage: '/images/catalog/condoms-01.png' },
+];
+
+const copy = {
+  en: {
+    topLineLeft: 'B2B wholesale supply for importers, distributors and private-label adult product brands.',
+    topLineRight: 'Fast quote · OEM/ODM · Discreet global shipping',
+    home: 'Home',
+    catalog: 'Catalog',
+    factoryGallery: 'Factory Gallery',
+    contact: 'Contact',
+    pageTitle: 'Product Catalog',
+    pageDesc: 'Same visual style as homepage. Product detail cards hide price, and inquiry is handled via LinkedIn or WhatsApp.',
+    allCategories: 'All Categories',
+    countSuffix: 'products',
+    empty: 'No products imported in this category yet.',
+    contactLinkedIn: 'LinkedIn',
+    contactWhatsApp: 'WhatsApp',
+    footerDesc: 'Factory-direct wholesale supply with OEM/ODM support for global B2B buyers.',
+  },
+  zh: {
+    topLineLeft: '面向进口商、分销商和品牌客户的 B2B 批发供应。',
+    topLineRight: '快速报价 · OEM/ODM · 隐私物流',
+    home: '首页',
+    catalog: '产品目录',
+    factoryGallery: '工厂图库',
+    contact: '联系',
+    pageTitle: '产品分类目录',
+    pageDesc: '色彩风格与主页统一。产品详情不显示价格，如需规格和报价请联系 LinkedIn 或 WhatsApp。',
+    allCategories: '全部分类',
+    countSuffix: '个产品',
+    empty: '该分类暂未导入产品数据',
+    contactLinkedIn: 'LinkedIn',
+    contactWhatsApp: 'WhatsApp',
+    footerDesc: '工厂直供，支持 OEM/ODM，为全球 B2B 客户提供稳定供货。',
+  },
 };
 
 export default function ProductsPage() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
   const [lang, setLang] = useState<SiteLanguage>('en');
-  const [showAdultWarning, setShowAdultWarning] = useState(false);
-  const [pendingDollsSelection, setPendingDollsSelection] = useState(false);
-  const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
+  const [categoryParam, setCategoryParam] = useState('');
 
   useEffect(() => {
-    const current = getBrowserLanguage();
-    setLang(current);
+    setLang(getBrowserLanguage());
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      setCategoryParam(params.get('category') ?? '');
+    }
 
     const onLangChange = (event: Event) => {
       const next = (event as CustomEvent<SiteLanguage>).detail;
       if (next) setLang(next);
     };
+
     window.addEventListener('site-language-change', onLangChange as EventListener);
     return () => window.removeEventListener('site-language-change', onLangChange as EventListener);
   }, []);
 
-  useEffect(() => {
-    const accepted = window.localStorage.getItem('adult_content_ok_dolls') === 'yes';
-    if (!accepted) {
-      setShowAdultWarning(true);
-    }
-  }, []);
+  const selectedCategory = CATEGORY_ORDER.find((item) => item.slug === categoryParam);
+  const categoryList = selectedCategory ? [selectedCategory] : CATEGORY_ORDER;
+  const allProducts = catalogProducts as CatalogProduct[];
+  const t = copy[lang];
 
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const categoryMatch = selectedCategory === 'all' || product.category === selectedCategory;
-      const certMatch = selectedCerts.length === 0 || selectedCerts.some((cert) => (product.certified ?? []).includes(cert));
-      return categoryMatch && certMatch;
-    });
-  }, [selectedCategory, selectedCerts]);
+  const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
+  const linkedinHref = siteConfig.social.linkedin;
 
   return (
-    <div className="min-h-screen bg-[var(--bg-app)] text-[var(--brand-ink)]">
-      <SiteHeader />
-
-      <section className="border-b border-[var(--brand-line)] bg-[linear-gradient(140deg,#0b2a55_0%,#154583_60%,#d3ad55_160%)] py-16 text-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-black md:text-5xl">B2B Product Portfolio</h1>
-          <p className="mt-4 max-w-3xl text-slate-200">Filtered by category and compliance tags for distributor-level sourcing.</p>
+    <div className="min-h-screen bg-slate-950 text-white">
+      <div className="border-b border-white/10 bg-slate-900/80 text-xs md:text-sm text-slate-300">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 flex flex-col md:flex-row gap-2 md:items-center md:justify-between">
+          <span>{t.topLineLeft}</span>
+          <span className="text-slate-400">{t.topLineRight}</span>
         </div>
-      </section>
+      </div>
 
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
-          <aside className="rounded-2xl border border-[var(--brand-line)] bg-white p-6 shadow-sm">
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-slate-900">
-              <Filter size={18} /> Filter
-            </h2>
-
-            <div className="mb-6">
-              <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">Category</h3>
-              <button
-                onClick={() => setSelectedCategory('all')}
-                className={`mb-2 block w-full rounded-lg px-3 py-2 text-left text-sm ${selectedCategory === 'all' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-              >
-                All Products
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => {
-                    if (cat.id === 'dolls') {
-                      const accepted = window.localStorage.getItem('adult_content_ok_dolls') === 'yes';
-                      if (!accepted) {
-                        setPendingDollsSelection(true);
-                        setShowAdultWarning(true);
-                        return;
-                      }
-                    }
-                    setSelectedCategory(cat.id);
-                  }}
-                  className={`mb-2 block w-full rounded-lg px-3 py-2 text-left text-sm ${selectedCategory === cat.id ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-                >
-                  {(CATEGORY_NAME[cat.id]?.[lang] ?? cat.name)} ({cat.count})
-                </button>
-              ))}
-            </div>
-
+      <header className="sticky top-0 z-30 backdrop-blur-xl bg-slate-950/80 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <img src="/branding/junhai-logo.jpg" alt="Junhai Logo" className="w-10 h-10 rounded-full border border-white/30 object-cover" />
             <div>
-              <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">Certification</h3>
-              {['CE认证', 'RoHS', 'FDA'].map((cert) => (
-                <label key={cert} className="mb-2 flex cursor-pointer items-center gap-2 text-sm text-slate-700">
-                  <input
-                    type="checkbox"
-                    checked={selectedCerts.includes(cert)}
-                    onChange={(e) => {
-                      if (e.target.checked) setSelectedCerts([...selectedCerts, cert]);
-                      else setSelectedCerts(selectedCerts.filter((c) => c !== cert));
-                    }}
-                  />
-                  {cert}
-                </label>
-              ))}
+              <div className="font-bold tracking-wide">JUNHAI International Trading Co., Ltd.</div>
+              <div className="text-xs text-slate-400">Foshan, China · Wholesale · OEM · Factory Resources</div>
             </div>
-          </aside>
+          </Link>
+          <nav className="hidden lg:flex items-center gap-7 text-sm text-slate-300">
+            <Link href="/" className="hover:text-white">{t.home}</Link>
+            <a href="#catalog" className="hover:text-white">{t.catalog}</a>
+            <Link href="/factory-gallery" className="hover:text-white">{t.factoryGallery}</Link>
+            <Link href="/#quote" className="hover:text-white">{t.contact}</Link>
+          </nav>
+          <div className="flex items-center gap-3">
+            <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
+            <a href={whatsappHref} target="_blank" rel="noreferrer" className="rounded-full bg-white text-slate-950 px-5 py-2.5 text-sm font-semibold hover:bg-slate-200 transition">
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </header>
 
-          <div>
-            <p className="mb-5 text-sm text-slate-600">Showing {filteredProducts.length} products</p>
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {filteredProducts.map((product) => (
-                <div key={product.id} className="rounded-2xl border border-[var(--brand-line)] bg-white p-5 shadow-sm transition hover:shadow-md">
-                  {(() => {
-                    const copy = getLocalizedProductCopy(product, lang);
-                    return (
-                      <>
-                  <div className="mb-3 flex items-start justify-between">
-                    <div>
-                      <p className="text-xs text-slate-500">SKU {product.id}</p>
-                      <h3 className="mt-1 text-lg font-bold text-slate-900">{copy.name}</h3>
-                    </div>
-                    <PackageCheck className="h-5 w-5 text-slate-500" />
-                  </div>
-                  <p className="min-h-[48px] text-sm text-slate-600">{copy.description}</p>
-                  <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                    {(product.certified ?? []).slice(0, 3).map((cert) => (
-                      <span key={cert} className="rounded-full bg-slate-100 px-2 py-1 text-slate-700">{cert}</span>
-                    ))}
-                  </div>
-                  <div className="mt-4 grid grid-cols-2 gap-2 rounded-lg bg-slate-50 p-3 text-sm">
-                    <div>
-                      <p className="text-slate-500">Price</p>
-                      <p className="font-bold text-slate-900">Inquiry for Bulk Quote</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-500">MOQ</p>
-                      <p className="font-bold text-slate-900">{product.moq}</p>
-                    </div>
-                  </div>
-                  <div className="mt-4 flex gap-2">
-                    <Link href="/contact#inquiry" className="flex-1 rounded-lg bg-slate-900 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-slate-800">Get Latest Quote / Ask for MOQ</Link>
-                    <a href={siteConfig.social.linkedin} target="_blank" rel="noreferrer" className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-center text-sm font-semibold text-slate-700 hover:bg-slate-100">LinkedIn</a>
-                  </div>
-                      </>
-                    );
-                  })()}
-                </div>
-              ))}
-            </div>
+      <section className="border-b border-white/10 bg-[linear-gradient(130deg,#0a1f43_0%,#163f7a_55%,#2f5ca7_100%)] py-14 text-white">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <h1 className="text-3xl font-black md:text-5xl">{t.pageTitle}</h1>
+          <p className="mt-4 max-w-3xl text-slate-200">{t.pageDesc}</p>
+
+          <div className="mt-7 flex flex-wrap gap-2">
+            <Link
+              href="/products"
+              onClick={() => setCategoryParam('')}
+              className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                !selectedCategory ? 'border-white bg-white text-slate-900' : 'border-white/40 text-white hover:bg-white/10'
+              }`}
+            >
+              {t.allCategories}
+            </Link>
+            {CATEGORY_ORDER.map((category) => (
+              <Link
+                key={category.slug}
+                href={`/products?category=${category.slug}`}
+                onClick={() => setCategoryParam(category.slug)}
+                className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                  selectedCategory?.slug === category.slug
+                    ? 'border-white bg-white text-slate-900'
+                    : 'border-white/40 text-white hover:bg-white/10'
+                }`}
+              >
+                {lang === 'zh' ? category.zh : category.en}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      {showAdultWarning && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
-            <p className="text-lg font-bold text-slate-900">Adult Content Warning</p>
-            <p className="mt-3 text-sm text-slate-600">{ADULT_WARNING[lang]}</p>
-            <div className="mt-5 flex gap-3">
-              <button
-                onClick={() => {
-                  window.localStorage.setItem('adult_content_ok_dolls', 'yes');
-                  if (pendingDollsSelection) {
-                    setSelectedCategory('dolls');
-                  }
-                  setPendingDollsSelection(false);
-                  setShowAdultWarning(false);
-                }}
-                className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
-              >
-                Yes, I am over 18
-              </button>
-              <Link href="/" className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700">
-                Leave Section
-              </Link>
-            </div>
+      <section id="catalog" className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+        <div className="space-y-10">
+          {categoryList.map((category) => {
+            const products = allProducts.filter((item) => item.categoryZh === category.zh);
+
+            return (
+              <div key={category.slug} className="rounded-3xl border border-white/10 bg-white/[0.05] p-6 md:p-8">
+                <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                  <div>
+                    <h2 className="text-2xl font-black md:text-3xl">{lang === 'zh' ? category.zh : category.en}</h2>
+                    <p className="mt-1 text-sm text-slate-300">{lang === 'zh' ? category.en : category.zh}</p>
+                  </div>
+                  <p className="text-sm font-semibold text-slate-300">
+                    {lang === 'zh' ? `共 ${products.length} ${t.countSuffix}` : `${products.length} ${t.countSuffix}`}
+                  </p>
+                </div>
+
+                {products.length === 0 ? (
+                  <div className="rounded-2xl border border-dashed border-white/30 bg-slate-900/60 p-8 text-center text-slate-300">
+                    {t.empty}
+                  </div>
+                ) : (
+                  <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+                    {products.map((product) => {
+                      const imageSrc = product.image || category.fallbackImage;
+                      const productNameZh = product.nameZh && product.nameZh !== 'None' ? product.nameZh : product.nameEn;
+                      const productName = lang === 'zh' ? productNameZh : product.nameEn;
+
+                      return (
+                        <div key={product.id} className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 transition hover:bg-slate-900">
+                          <div className="h-44 bg-slate-800">
+                            <img src={imageSrc} alt={productName} className="h-full w-full object-cover" />
+                          </div>
+                          <div className="p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">SKU {product.id}</p>
+                            <h3 className="mt-1 line-clamp-2 min-h-12 text-sm font-bold text-white">{productName}</h3>
+                            <p className="mt-1 text-xs text-slate-400">{lang === 'zh' ? product.nameEn : productNameZh}</p>
+
+                            <div className="mt-4 grid grid-cols-2 gap-2">
+                              <a
+                                href={linkedinHref}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center justify-center gap-2 rounded-lg border border-cyan-300/50 px-3 py-2 text-xs font-semibold text-cyan-200 hover:bg-cyan-500/10"
+                              >
+                                <ExternalLink size={14} /> {t.contactLinkedIn}
+                              </a>
+                              <a
+                                href={whatsappHref}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-300/50 px-3 py-2 text-xs font-semibold text-emerald-200 hover:bg-emerald-500/10"
+                              >
+                                <MessageCircle size={14} /> {t.contactWhatsApp}
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <footer className="border-t border-white/10 bg-slate-950">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 flex flex-col md:flex-row gap-6 md:items-center md:justify-between text-sm text-slate-400">
+          <div>
+            <div className="text-white font-bold text-lg">JUNHAI International Trading Co., Ltd.</div>
+            <div className="mt-1">{t.footerDesc}</div>
+          </div>
+          <div className="flex flex-wrap gap-4">
+            <a href={linkedinHref} target="_blank" rel="noreferrer" className="hover:text-white">{t.contactLinkedIn}</a>
+            <a href={whatsappHref} target="_blank" rel="noreferrer" className="hover:text-white">{t.contactWhatsApp}</a>
+            <Link href="/factory-gallery" className="hover:text-white">{t.factoryGallery}</Link>
           </div>
         </div>
-      )}
-
-      <SiteFooter />
+      </footer>
     </div>
   );
 }

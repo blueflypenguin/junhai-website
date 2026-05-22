@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-export type SiteLanguage = 'en' | 'zh' | 'es';
+export type SiteLanguage = 'en' | 'zh';
 
 const STORAGE_KEY = 'site_language';
 
@@ -10,14 +10,13 @@ function normalizeToSiteLanguage(value: string | null | undefined): SiteLanguage
   if (!value) return 'en';
   const lower = value.toLowerCase();
   if (lower.startsWith('zh')) return 'zh';
-  if (lower.startsWith('es')) return 'es';
   return 'en';
 }
 
 export function getBrowserLanguage(): SiteLanguage {
   if (typeof window === 'undefined') return 'en';
   const saved = window.localStorage.getItem(STORAGE_KEY) as SiteLanguage | null;
-  if (saved === 'en' || saved === 'zh' || saved === 'es') return saved;
+  if (saved === 'en' || saved === 'zh') return saved;
   const detected = normalizeToSiteLanguage(window.navigator.language);
   window.localStorage.setItem(STORAGE_KEY, detected);
   return detected;
@@ -48,7 +47,6 @@ export default function LanguageSwitcher() {
     >
       <option value="en">EN</option>
       <option value="zh">中文</option>
-      <option value="es">ES</option>
     </select>
   );
 }

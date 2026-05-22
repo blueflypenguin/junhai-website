@@ -1,44 +1,149 @@
-﻿'use client';
+'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
+import Link from 'next/link';
 import {
   ArrowRight,
-  Boxes,
   CheckCircle2,
   Factory,
-  Globe2,
-  Mail,
-  MessageCircle,
   PackageCheck,
-  Phone,
+  Globe2,
   ShieldCheck,
+  Boxes,
+  MessageCircle,
   Truck,
   BadgeCheck,
+  Mail,
+  Phone,
+  Building2,
+  PlayCircle,
 } from 'lucide-react';
 import { siteConfig } from '../src/config/site';
-import LanguageSwitcher, { getBrowserLanguage, SiteLanguage } from '../src/components/LanguageSwitcher';
+import LanguageSwitcher from '../src/components/LanguageSwitcher';
 import catalogProducts from '../src/data/catalogProducts.json';
 
-const categories = [
+type CatalogProduct = {
+  id: string;
+  categoryZh: string;
+  categoryEn: string;
+  nameZh: string;
+  nameEn: string;
+  priceWholesale: number | string;
+  image: string;
+};
+
+const categoryCards = [
+  {
+    slug: 'full-body-silicone-dolls',
+    titleZh: '全身定制硅胶娃娃',
+    titleEn: 'Full-Body Custom Silicone Dolls',
+    fallback: '/images/docx-template/image4.png',
+  },
+  {
+    slug: 'half-body-molded-dolls',
+    titleZh: '半身倒模',
+    titleEn: 'Half-Body Molded Dolls',
+    fallback: '/images/docx-template/image5.png',
+  },
+  {
+    slug: 'masturbator-cups',
+    titleZh: '飞机杯',
+    titleEn: 'Masturbator Cups',
+    fallback: '/images/catalog/masturbator-cups-01.png',
+  },
+  {
+    slug: 'female-toys',
+    titleZh: '女性玩具',
+    titleEn: 'Female Toys',
+    fallback: '/images/catalog/female-toys-01.png',
+  },
+  {
+    slug: 'lingerie-costumes',
+    titleZh: '情趣制服',
+    titleEn: 'Lingerie & Costumes',
+    fallback: '/images/catalog/lingerie-costumes-01.png',
+  },
+  {
+    slug: 'dildos',
+    titleZh: '阳具',
+    titleEn: 'Dildos',
+    fallback: '/images/catalog/dildos-01.png',
+  },
+  {
+    slug: 'bdsm',
+    titleZh: 'BDSM',
+    titleEn: 'BDSM',
+    fallback: '/images/catalog/bdsm-01.jpg',
+  },
+  {
+    slug: 'chastity-cages',
+    titleZh: '贞操锁',
+    titleEn: 'Chastity Cages',
+    fallback: '/images/catalog/chastity-cages-01.png',
+  },
+  {
+    slug: 'condoms',
+    titleZh: '安全套',
+    titleEn: 'Condoms',
+    fallback: '/images/catalog/condoms-01.png',
+  },
+];
+
+const legacyProductVisuals = [
   {
     title: 'Silicone Dolls',
     desc: 'Premium models for distributors and private-label adult product brands.',
-    image: '/images/materials/product-head-pink-wig.jpg',
+    visual: '/images/docx-template/image4.png',
   },
   {
     title: 'TPE Dolls',
     desc: 'Cost-effective options for bulk wholesale and market testing.',
-    image: '/images/materials/factory-face-detailing.jpg',
+    visual: '/images/docx-template/image5.png',
   },
   {
     title: 'Torso & Mini Dolls',
     desc: 'Compact products with lower shipping cost and flexible trial orders.',
-    image: '/images/materials/factory-drying-line.jpg',
+    visual: '/images/docx-template/image6.png',
   },
   {
     title: 'Custom OEM Models',
     desc: 'Face, body, skin tone, makeup, packaging and logo customization.',
-    image: '/images/materials/factory-packaging-area.jpg',
+    visual: '/images/docx-template/image7.png',
+  },
+];
+
+const categoryToZh: Record<string, string> = {
+  'full-body-silicone-dolls': '全身定制硅胶娃娃',
+  'half-body-molded-dolls': '半身倒模',
+  'masturbator-cups': '飞机杯',
+  'female-toys': '女性玩具',
+  'lingerie-costumes': '情趣制服',
+  dildos: '阳具',
+  bdsm: 'BDSM',
+  'chastity-cages': '贞操锁',
+  condoms: '安全套',
+};
+
+const factoryCapabilities = [
+  {
+    title: 'R&D Sculpting',
+    desc: 'Clay sculpting drafts and head sculpting semi-finished assets for custom development.',
+    image: '/images/docx-template/image11.png',
+  },
+  {
+    title: 'TPE/Silicone Production',
+    desc: 'Medical-grade material filling and inner metal skeleton baking/forming process.',
+    image: '/images/docx-template/image12.png',
+  },
+  {
+    title: 'Hand-painted Makeup',
+    desc: 'Clean workshop detailing for realistic face finishing and stable quality control.',
+    image: '/images/docx-template/image13.png',
+  },
+  {
+    title: 'QC & Secure Logistics',
+    desc: 'Pre-shipment tensile checks and neutral heavy-duty packing for discreet export.',
+    image: '/images/docx-template/image14.png',
   },
 ];
 
@@ -87,7 +192,7 @@ const process = [
 const faq = [
   {
     q: 'Are you a factory or trading company?',
-    a: 'We are an integrated manufacturing and trading factory in China, supporting wholesale, OEM/ODM, and private-label cooperation with direct in-house production capability.',
+    a: 'We are a direct factory with integrated manufacturing and trading operations in China, offering one-stop OEM/ODM and wholesale support.',
   },
   {
     q: 'Can I order samples before bulk purchase?',
@@ -103,122 +208,47 @@ const faq = [
   },
 ];
 
-const CATEGORY_ORDER = [
-  { zh: '全身定制硅胶娃娃', en: 'Full-Body Custom Silicone Dolls' },
-  { zh: '半身倒模', en: 'Half-Body Molded Dolls' },
-  { zh: '飞机杯', en: 'Masturbator Cups' },
-  { zh: '女性玩具', en: 'Female Toys' },
-  { zh: '情趣制服', en: 'Lingerie & Costumes' },
-  { zh: '阳具', en: 'Dildos' },
-  { zh: 'BDSM', en: 'BDSM' },
-  { zh: '贞操锁', en: 'Chastity Cages' },
-  { zh: '安全套', en: 'Condoms' },
-] as const;
-
-const COPY = {
-  en: {
-    topNotice: 'B2B wholesale supply for importers, distributors and private-label adult product brands.',
-    topBadge: 'Fast quote · OEM/ODM · Discreet global shipping',
-    navProducts: 'Products',
-    navOEM: 'OEM/ODM',
-    navFactory: 'Factory & QC',
-    navShipping: 'Shipping',
-    navContact: 'Contact',
-    quote: 'Get Quote',
-    catalogTitle: 'Distributor Catalog by Major Category',
-    catalogDesc: 'Products synchronized from your latest Excel catalog with bilingual category display.',
-    factoryExterior: 'Factory Exterior',
-    factoryExteriorDesc: 'Modern production campus and stable large-scale manufacturing support.',
-    wholesalePrice: 'Wholesale Price',
-  },
-  zh: {
-    topNotice: '面向进口商、分销商、私牌品牌的B2B批发供货服务。',
-    topBadge: '快速报价 · OEM/ODM · 隐私化全球物流',
-    navProducts: '产品',
-    navOEM: '定制',
-    navFactory: '工厂与质检',
-    navShipping: '物流',
-    navContact: '联系',
-    quote: '获取报价',
-    catalogTitle: '按大分类展示的分销产品目录',
-    catalogDesc: '已根据你提供的Excel同步产品，并支持中英文分类展示。',
-    factoryExterior: '工厂外景',
-    factoryExteriorDesc: '现代化生产园区，支持稳定规模化制造交付。',
-    wholesalePrice: '批发价',
-  },
-} as const;
-
-type CatalogProduct = {
-  id: string;
-  categoryZh: string;
-  categoryEn: string;
-  nameZh: string;
-  nameEn: string;
-  priceWholesale: string | number;
-  image: string;
-};
-
 export default function Home() {
-  const [lang, setLang] = useState<SiteLanguage>('en');
   const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
-  const linkedinHref = siteConfig.social.linkedin;
-  const t = lang === 'zh' ? COPY.zh : COPY.en;
+  const catalogItems = catalogProducts as CatalogProduct[];
 
-  const cleanCatalog = useMemo(
-    () => (catalogProducts as CatalogProduct[]).filter((p) => p.nameZh && p.nameZh !== 'None'),
-    []
-  );
-
-  const groupedCatalog = useMemo(
-    () =>
-      CATEGORY_ORDER.map((cat) => ({
-        ...cat,
-        items: cleanCatalog.filter((p) => p.categoryZh === cat.zh).slice(0, 4),
-      })),
-    [cleanCatalog]
-  );
-
-  useEffect(() => {
-    setLang(getBrowserLanguage());
-    const onLangChange = (event: Event) => {
-      const next = (event as CustomEvent<SiteLanguage>).detail;
-      if (next) setLang(next);
-    };
-    window.addEventListener('site-language-change', onLangChange as EventListener);
-    return () => window.removeEventListener('site-language-change', onLangChange as EventListener);
-  }, []);
+  const categoryCover: Record<string, string> = {};
+  for (const card of categoryCards) {
+    const found = catalogItems.find((item) => item.categoryZh === categoryToZh[card.slug] && item.image);
+    categoryCover[card.slug] = found?.image || card.fallback;
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <div className="border-b border-white/10 bg-slate-900/80 text-xs text-slate-300 md:text-sm">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2 md:flex-row md:items-center md:justify-between md:px-8">
-          <span>{t.topNotice}</span>
-          <span className="text-slate-400">{t.topBadge}</span>
+      <div className="border-b border-white/10 bg-slate-900/80 text-xs md:text-sm text-slate-300">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 flex flex-col md:flex-row gap-2 md:items-center md:justify-between">
+          <span>B2B wholesale supply for importers, distributors and private-label adult product brands.</span>
+          <span className="text-slate-400">Fast quote · OEM/ODM · Discreet global shipping</span>
         </div>
       </div>
 
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-8">
+      <header className="sticky top-0 z-30 backdrop-blur-xl bg-slate-950/80 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white font-black text-slate-950">CN</div>
+            <img src="/branding/junhai-logo.jpg" alt="Junhai Logo" className="w-10 h-10 rounded-full border border-white/30 object-cover" />
             <div>
-              <div className="font-bold tracking-wide">China Doll Supply</div>
-              <div className="text-xs text-slate-400">Wholesale · OEM · Factory Resources</div>
+              <div className="font-bold tracking-wide">JUNHAI International Trading Co., Ltd.</div>
+              <div className="text-xs text-slate-400">Foshan, China · Wholesale · OEM · Factory Resources</div>
             </div>
           </div>
-          <nav className="hidden items-center gap-7 text-sm text-slate-300 lg:flex">
-            <a href="#products" className="hover:text-white">{t.navProducts}</a>
-            <a href="#oem" className="hover:text-white">{t.navOEM}</a>
-            <a href="#quality" className="hover:text-white">{t.navFactory}</a>
-            <a href="#shipping" className="hover:text-white">{t.navShipping}</a>
-            <a href="#quote" className="hover:text-white">{t.navContact}</a>
+          <nav className="hidden lg:flex items-center gap-7 text-sm text-slate-300">
+            <a href="#products" className="hover:text-white">Products</a>
+            <a href="#oem" className="hover:text-white">OEM/ODM</a>
+            <a href="#quality" className="hover:text-white">Factory & QC</a>
+            <a href="#shipping" className="hover:text-white">Shipping</a>
+            <a href="#quote" className="hover:text-white">Contact</a>
           </nav>
           <div className="flex items-center gap-3">
             <div className="hidden md:block">
               <LanguageSwitcher />
             </div>
-            <a href="#quote" className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-slate-200">
-              {t.quote}
+            <a href="#quote" className="rounded-full bg-white text-slate-950 px-5 py-2.5 text-sm font-semibold hover:bg-slate-200 transition">
+              Get Quote
             </a>
           </div>
         </div>
@@ -226,27 +256,32 @@ export default function Home() {
 
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.28),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(168,85,247,0.18),transparent_30%)]" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 md:px-8 md:py-24 lg:grid-cols-2">
+        <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24 grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-slate-300">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-slate-300 mb-6">
               <CheckCircle2 size={16} /> Factory-direct B2B supply from China
             </div>
-            <h1 className="text-4xl font-black leading-tight tracking-tight md:text-6xl">
+            <h1 className="text-4xl md:text-6xl font-black leading-tight tracking-tight">
               Silicone Doll Wholesale Supplier for Global Buyers
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 md:text-xl">
+            <p className="mt-6 text-lg md:text-xl text-slate-300 leading-relaxed max-w-2xl">
               Wholesale silicone and TPE dolls for importers, distributors, adult stores and private-label brands. We support OEM/ODM customization, discreet packaging and global shipping solutions.
             </p>
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <a href="#quote" className="flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 font-bold text-slate-950 transition hover:bg-slate-200">
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <a href="#quote" className="rounded-full bg-white text-slate-950 px-7 py-4 font-bold flex items-center justify-center gap-2 hover:bg-slate-200 transition">
                 Request Wholesale Quote <ArrowRight size={18} />
               </a>
-              <a href="#products" className="flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-4 font-bold transition hover:bg-white/10">
+              <a href="#products" className="rounded-full border border-white/20 px-7 py-4 font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition">
                 View Product Lines
               </a>
             </div>
-            <div className="mt-8 grid grid-cols-2 gap-4 text-sm text-slate-300 md:grid-cols-4">
-              {['OEM/ODM Available', 'Private Label Packaging', 'Sample Orders', 'Global Shipping'].map((item) => (
+            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-slate-300">
+              {[
+                'OEM/ODM Available',
+                'Private Label Packaging',
+                'Sample Orders',
+                'Global Shipping',
+              ].map((item) => (
                 <div key={item} className="flex items-center gap-2">
                   <CheckCircle2 size={16} className="text-emerald-300" />
                   <span>{item}</span>
@@ -256,15 +291,15 @@ export default function Home() {
           </div>
 
           <div className="relative">
-            <div className="rounded-[2rem] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-sm md:p-6">
-              <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-slate-900">
-                <img src="/images/materials/brand-showroom.jpg" alt="Silicone doll wholesale hero" className="h-80 w-full object-cover md:h-[430px]" />
+            <div className="rounded-[2rem] border border-white/15 bg-white/10 shadow-2xl p-4 md:p-6 backdrop-blur-sm">
+              <div className="rounded-[1.5rem] bg-slate-900 border border-white/10 overflow-hidden">
+                <img src="/images/docx-template/image2.png" alt="Hero right visual" className="h-80 md:h-[430px] w-full bg-black object-contain" />
                 <div className="grid grid-cols-3 border-t border-white/10">
-                  <div className="border-r border-white/10 p-4">
+                  <div className="p-4 border-r border-white/10">
                     <div className="text-2xl font-black">24h</div>
                     <div className="text-xs text-slate-400">Quote Response</div>
                   </div>
-                  <div className="border-r border-white/10 p-4">
+                  <div className="p-4 border-r border-white/10">
                     <div className="text-2xl font-black">OEM</div>
                     <div className="text-xs text-slate-400">Brand Support</div>
                   </div>
@@ -280,7 +315,7 @@ export default function Home() {
       </section>
 
       <section className="border-y border-white/10 bg-white/[0.03]">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 py-6 text-center text-sm text-slate-300 md:grid-cols-5 md:px-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 grid grid-cols-2 md:grid-cols-5 gap-4 text-center text-sm text-slate-300">
           <div>Factory Resources</div>
           <div>Wholesale Price</div>
           <div>OEM/ODM</div>
@@ -289,99 +324,100 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-14 md:px-8">
-        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.05] lg:grid lg:grid-cols-2">
-          <img src="/images/materials/factory-exterior.jpg" alt="Factory exterior" className="h-72 w-full object-cover lg:h-full" />
-          <div className="p-8">
-            <p className="text-sm uppercase tracking-[0.25em] text-slate-400">{t.factoryExterior}</p>
-            <h2 className="mt-3 text-3xl font-black">{lang === 'zh' ? '规模化制造基地' : 'Large-Scale Manufacturing Base'}</h2>
-            <p className="mt-4 text-slate-300">{t.factoryExteriorDesc}</p>
+      <section className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+        <div className="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-white text-slate-950 flex items-center justify-center">
+              <Building2 size={20} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-black">JUNHAI 企业名片</h2>
+              <p className="text-sm text-slate-300">Factory + Trading integrated service for global B2B buyers</p>
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+            <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+              <p className="text-slate-400">公司名称</p>
+              <p className="mt-1 font-semibold">{siteConfig.company.name}</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+              <p className="text-slate-400">公司类型</p>
+              <p className="mt-1 font-semibold">工贸一体化工厂</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+              <p className="text-slate-400">邮箱</p>
+              <p className="mt-1 font-semibold">{siteConfig.contact.email}</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+              <p className="text-slate-400">WhatsApp</p>
+              <p className="mt-1 font-semibold">{siteConfig.contact.whatsapp}</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="products" className="mx-auto max-w-7xl px-4 py-20 md:px-8">
-        <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <section id="products" className="max-w-7xl mx-auto px-4 md:px-8 py-20">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Product Lines</p>
-            <h2 className="mt-3 text-3xl font-black md:text-5xl">Wholesale Products for Different Markets</h2>
+            <h2 className="mt-3 text-3xl md:text-5xl font-black">Wholesale Products for Different Markets</h2>
           </div>
-          <p className="max-w-xl leading-relaxed text-slate-300">
-            Choose from silicone dolls, TPE dolls, torso models and custom OEM designs for online stores, distributors and adult product brands.
+          <p className="text-slate-300 max-w-xl leading-relaxed">
+            Keep the original 4 visuals, and use the 9-category row below as quick entry to the product catalog page.
           </p>
         </div>
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {categories.map((cat) => (
-            <div key={cat.title} className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.06] transition hover:bg-white/[0.09]">
-              <img src={cat.image} alt={cat.title} className="h-44 w-full object-cover" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {legacyProductVisuals.map((item) => (
+            <div key={item.title} className="rounded-[1.5rem] bg-white/[0.06] border border-white/10 overflow-hidden hover:bg-white/[0.09] transition">
+              <div className="h-44">
+                <img src={item.visual} alt={item.title} className="h-full w-full object-cover" />
+              </div>
               <div className="p-5">
-                <h3 className="text-xl font-bold">{cat.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-300">{cat.desc}</p>
+                <h3 className="text-xl font-bold">{item.title}</h3>
+                <p className="mt-3 text-sm text-slate-300 leading-relaxed">{item.desc}</p>
               </div>
             </div>
           ))}
         </div>
-      </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-20 md:px-8">
-        <div className="mb-8">
-          <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Distributor Catalog</p>
-          <h2 className="mt-3 text-3xl font-black md:text-5xl">{t.catalogTitle}</h2>
-          <p className="mt-3 max-w-3xl text-slate-300">{t.catalogDesc}</p>
-        </div>
-
-        <div className="space-y-10">
-          {groupedCatalog.map((group) => (
-            <div key={group.zh}>
-              <h3 className="mb-4 text-xl font-bold text-white">
-                {lang === 'zh' ? group.zh : group.en}
-              </h3>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {group.items.map((item) => (
-                  <div key={item.id} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
-                    <img
-                      src={item.image || '/images/materials/factory-exterior.jpg'}
-                      alt={lang === 'zh' ? item.nameZh : item.nameEn}
-                      className="h-44 w-full object-cover"
-                    />
-                    <div className="p-4">
-                      <p className="line-clamp-2 text-sm font-semibold text-white">{lang === 'zh' ? item.nameZh : item.nameEn}</p>
-                      <p className="mt-2 text-xs text-slate-400">
-                        {lang === 'zh' ? '分类' : 'Category'}: {lang === 'zh' ? group.zh : group.en}
-                      </p>
-                      {item.priceWholesale !== '' && (
-                        <p className="mt-2 text-sm text-emerald-300">
-                          {t.wholesalePrice}: {item.priceWholesale}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
+        <div className="mt-10">
+          <p className="text-sm text-slate-300 mb-4">9 Categories Quick Entry</p>
+          <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-3">
+          {categoryCards.map((cat) => (
+            <div key={cat.slug} className="rounded-xl bg-white/[0.05] border border-white/10 overflow-hidden hover:bg-white/[0.09] transition">
+              <Link href={`/products?category=${cat.slug}`} className="block h-24">
+                <img src={categoryCover[cat.slug]} alt={cat.titleZh} className="h-full w-full object-cover" />
+              </Link>
+              <div className="p-2.5">
+                <Link href={`/products?category=${cat.slug}`} className="text-xs font-semibold leading-tight hover:underline line-clamp-2 block">
+                  {cat.titleZh}
+                </Link>
               </div>
             </div>
           ))}
+          </div>
         </div>
       </section>
 
-      <section className="border-y border-white/10 bg-slate-900/60">
-        <div className="mx-auto max-w-7xl px-4 py-20 md:px-8">
-          <div className="mx-auto mb-12 max-w-3xl text-center">
+      <section className="bg-slate-900/60 border-y border-white/10">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-20">
+          <div className="text-center max-w-3xl mx-auto mb-12">
             <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Why Work With Us</p>
-            <h2 className="mt-3 text-3xl font-black md:text-5xl">Built for Adult Product Importers</h2>
-            <p className="mt-5 leading-relaxed text-slate-300">
+            <h2 className="mt-3 text-3xl md:text-5xl font-black">Built for Adult Product Importers</h2>
+            <p className="mt-5 text-slate-300 leading-relaxed">
               We help overseas buyers reduce sourcing risk with stable factory resources, flexible customization, quality checks and privacy-focused shipping support.
             </p>
           </div>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {advantages.map((item) => {
               const Icon = item.icon;
               return (
-                <div key={item.title} className="rounded-[1.5rem] border border-white/10 bg-white/[0.05] p-6">
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-slate-950">
+                <div key={item.title} className="rounded-[1.5rem] bg-white/[0.05] border border-white/10 p-6">
+                  <div className="w-12 h-12 rounded-2xl bg-white text-slate-950 flex items-center justify-center mb-5">
                     <Icon size={24} />
                   </div>
                   <h3 className="text-xl font-bold">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-300">{item.desc}</p>
+                  <p className="mt-3 text-slate-300 leading-relaxed text-sm">{item.desc}</p>
                 </div>
               );
             })}
@@ -389,14 +425,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="oem" className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 md:px-8 lg:grid-cols-2">
+      <section id="oem" className="max-w-7xl mx-auto px-4 md:px-8 py-20 grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <p className="text-sm uppercase tracking-[0.25em] text-slate-400">OEM / ODM</p>
-          <h2 className="mt-3 text-3xl font-black md:text-5xl">Custom Doll Solutions for Your Brand</h2>
-          <p className="mt-6 text-lg leading-relaxed text-slate-300">
+          <h2 className="mt-3 text-3xl md:text-5xl font-black">Custom Doll Solutions for Your Brand</h2>
+          <p className="mt-6 text-slate-300 leading-relaxed text-lg">
             From body shape and face design to packaging and private label branding, we support flexible OEM/ODM services for qualified wholesale buyers.
           </p>
-          <div className="mt-8 grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
+          <div className="mt-8 grid sm:grid-cols-2 gap-3 text-sm text-slate-300">
             {[
               'Custom face design',
               'Body shape options',
@@ -407,38 +443,80 @@ export default function Home() {
               'Custom packaging box',
               'Accessory set planning',
             ].map((item) => (
-              <div key={item} className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3">
+              <div key={item} className="flex items-center gap-2 rounded-xl bg-white/[0.05] border border-white/10 px-4 py-3">
                 <CheckCircle2 size={16} className="text-emerald-300" /> {item}
               </div>
             ))}
           </div>
         </div>
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-6">
-          <div className="grid gap-4 rounded-[1.5rem] border border-white/10 bg-slate-900 p-4">
-            <img src="/images/materials/factory-airbrush-makeup.jpg" alt="Airbrush makeup process" className="h-44 w-full rounded-xl object-cover" />
-            <img src="/images/materials/factory-face-detailing.jpg" alt="Face detailing process" className="h-44 w-full rounded-xl object-cover" />
-            <p className="text-center text-sm text-slate-300">
-              Real production snapshots: makeup refinement and detail finishing for OEM requests.
-            </p>
+        <div className="rounded-[2rem] bg-white/[0.06] border border-white/10 p-6">
+          <div className="rounded-[1.5rem] overflow-hidden border border-white/10 bg-black">
+            <img src="/images/docx-template/image9.png" alt="OEM ODM configuration solutions" className="w-full h-[420px] object-cover" />
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-20 md:px-8">
-        <div className="rounded-[2rem] bg-white p-6 text-slate-950 md:p-10">
-          <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-20">
+        <div className="mb-8">
+          <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Manufacturing Excellence</p>
+          <h2 className="mt-3 text-3xl md:text-5xl font-black">Verified Source Manufacturing Capability</h2>
+          <p className="mt-4 text-slate-300 max-w-3xl">
+            Over 5,000 m2 cooperative manufacturing base. Strict QC inspection standard before global discreet shipping.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-5">
+          {factoryCapabilities.map((item) => (
+            <div key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.05] overflow-hidden">
+              <div className="h-48 bg-slate-900">
+                <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
+              </div>
+              <div className="p-5">
+                <h3 className="text-xl font-bold">{item.title}</h3>
+                <p className="mt-3 text-sm text-slate-300 leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-20">
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 md:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6">
+            <div>
+              <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Factory Media</p>
+              <h2 className="mt-3 text-3xl md:text-4xl font-black">工厂实景视频与图库</h2>
+              <p className="mt-3 text-slate-300">首页展示工厂视频，点击按钮进入工厂实景图素材库。</p>
+            </div>
+            <Link href="/factory-gallery" className="rounded-full border border-white/20 px-6 py-3 font-semibold inline-flex items-center justify-center gap-2 hover:bg-white/10">
+              查看工厂实景图库 <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div className="rounded-2xl overflow-hidden border border-white/10 bg-black">
+            <video className="w-full h-[260px] md:h-[420px] object-cover" controls muted preload="metadata" poster="/images/materials/factory-exterior.jpg">
+              <source src="/videos/factory-production-walkthrough.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div className="mt-4 inline-flex items-center gap-2 text-sm text-slate-300">
+            <PlayCircle size={16} /> factory-production-walkthrough.mp4
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-20">
+        <div className="rounded-[2rem] bg-white text-slate-950 p-6 md:p-10">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
             <div>
               <p className="text-sm uppercase tracking-[0.25em] text-slate-500">Cooperation Process</p>
-              <h2 className="mt-3 text-3xl font-black md:text-4xl">How Wholesale Cooperation Works</h2>
+              <h2 className="mt-3 text-3xl md:text-4xl font-black">How Wholesale Cooperation Works</h2>
             </div>
-            <a href="#quote" className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 font-bold text-white">
+            <a href="#quote" className="rounded-full bg-slate-950 text-white px-6 py-3 font-bold inline-flex items-center justify-center gap-2">
               Start Inquiry <ArrowRight size={18} />
             </a>
           </div>
-          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
+          <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
             {process.map((step, index) => (
-              <div key={step} className="min-h-32 rounded-2xl bg-slate-100 p-5">
-                <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-950 font-bold text-white">{index + 1}</div>
+              <div key={step} className="rounded-2xl bg-slate-100 p-5 min-h-32">
+                <div className="w-9 h-9 rounded-full bg-slate-950 text-white flex items-center justify-center font-bold mb-4">{index + 1}</div>
                 <div className="font-bold leading-tight">{step}</div>
               </div>
             ))}
@@ -446,18 +524,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="quality" className="border-y border-white/10 bg-slate-900/60">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-20 md:px-8 lg:grid-cols-2">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.05] p-7">
-            <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-slate-950">
+      <section id="quality" className="bg-slate-900/60 border-y border-white/10">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-20 grid lg:grid-cols-2 gap-8">
+          <div className="rounded-[2rem] bg-white/[0.05] border border-white/10 p-7">
+            <div className="w-14 h-14 rounded-2xl bg-white text-slate-950 flex items-center justify-center mb-6">
               <ShieldCheck size={28} />
             </div>
             <h2 className="text-3xl font-black">Factory Resources & Quality Control</h2>
-            <img src="/images/materials/factory-molding-workshop.jpg" alt="Factory molding workshop" className="mt-4 h-48 w-full rounded-xl object-cover" />
-            <p className="mt-4 leading-relaxed text-slate-300">
+            <p className="mt-4 text-slate-300 leading-relaxed">
               We support buyers with product selection, customization coordination, pre-shipment checking, packaging confirmation and shipment arrangement.
             </p>
-            <div className="mt-7 grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
+            <div className="mt-7 grid sm:grid-cols-2 gap-3 text-sm text-slate-300">
               {[
                 'Appearance check',
                 'Material surface check',
@@ -473,16 +550,15 @@ export default function Home() {
             </div>
           </div>
 
-          <div id="shipping" className="rounded-[2rem] border border-white/10 bg-white/[0.05] p-7">
-            <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-slate-950">
+          <div id="shipping" className="rounded-[2rem] bg-white/[0.05] border border-white/10 p-7">
+            <div className="w-14 h-14 rounded-2xl bg-white text-slate-950 flex items-center justify-center mb-6">
               <Truck size={28} />
             </div>
             <h2 className="text-3xl font-black">Discreet Packaging & Global Shipping</h2>
-            <img src="/images/materials/factory-assembly-hall.jpg" alt="Factory assembly hall" className="mt-4 h-48 w-full rounded-xl object-cover" />
-            <p className="mt-4 leading-relaxed text-slate-300">
+            <p className="mt-4 text-slate-300 leading-relaxed">
               Products can be shipped in neutral cartons without adult-related words on the outside. Shipping solutions are selected based on destination, quantity and buyer requirements.
             </p>
-            <div className="mt-7 grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
+            <div className="mt-7 grid sm:grid-cols-2 gap-3 text-sm text-slate-300">
               {[
                 'Neutral outer carton',
                 'Privacy-focused shipment',
@@ -500,47 +576,23 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-20 md:px-8">
-        <div className="grid gap-8 lg:grid-cols-2">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.05] p-6">
-            <h3 className="text-2xl font-black">Factory Production Walkthrough</h3>
-            <p className="mt-2 text-sm text-slate-300">Live clip from workshop floor, used for buyer trust verification.</p>
-            <video
-              className="mt-4 h-[420px] w-full rounded-xl object-cover"
-              src="/videos/factory-production-walkthrough.mp4"
-              poster="/images/materials/factory-drying-line.jpg"
-              controls
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            />
-          </div>
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.05] p-6">
-            <h3 className="text-2xl font-black">Packing & Shipment Readiness</h3>
-            <p className="mt-2 text-sm text-slate-300">Finished goods staging and carton preparation before export shipment.</p>
-            <img src="/images/materials/factory-packaging-area.jpg" alt="Packing and shipment area" className="mt-4 h-[420px] w-full rounded-xl object-cover" />
-          </div>
-        </div>
-      </section>
-
-      <section id="quote" className="mx-auto grid max-w-7xl items-start gap-10 px-4 py-20 md:px-8 lg:grid-cols-2">
+      <section id="quote" className="max-w-7xl mx-auto px-4 md:px-8 py-20 grid lg:grid-cols-2 gap-10 items-start">
         <div>
           <p className="text-sm uppercase tracking-[0.25em] text-slate-400">FAQ</p>
-          <h2 className="mt-3 text-3xl font-black md:text-5xl">Common Questions from Buyers</h2>
+          <h2 className="mt-3 text-3xl md:text-5xl font-black">Common Questions from Buyers</h2>
           <div className="mt-8 space-y-4">
             {faq.map((item) => (
-              <div key={item.q} className="rounded-2xl border border-white/10 bg-white/[0.05] p-5">
+              <div key={item.q} className="rounded-2xl bg-white/[0.05] border border-white/10 p-5">
                 <h3 className="font-bold">{item.q}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-300">{item.a}</p>
+                <p className="mt-2 text-sm text-slate-300 leading-relaxed">{item.a}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl md:p-8">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-950 text-white">
+        <div className="rounded-[2rem] bg-white text-slate-950 p-6 md:p-8 shadow-2xl">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-slate-950 text-white flex items-center justify-center">
               <MessageCircle size={24} />
             </div>
             <div>
@@ -550,41 +602,74 @@ export default function Home() {
           </div>
 
           <form className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid md:grid-cols-2 gap-4">
               <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Name" />
               <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Company Name" />
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid md:grid-cols-2 gap-4">
               <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Country" />
               <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Email" />
             </div>
-            <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="WhatsApp / Telegram" />
-            <div className="grid gap-4 md:grid-cols-2">
+            <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="WhatsApp / LinkedIn" />
+            <div className="grid md:grid-cols-2 gap-4">
               <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Product Type" />
               <input className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="Estimated Quantity" />
             </div>
-            <textarea className="min-h-32 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="OEM/ODM needs, target price range, shipping country or other requirements" />
-            <button type="button" className="flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 py-4 font-bold text-white transition hover:bg-slate-800">
+            <textarea className="w-full min-h-32 rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-950" placeholder="OEM/ODM needs, target price range, shipping country or other requirements" />
+            <button type="button" className="w-full rounded-full bg-slate-950 text-white py-4 font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition">
               Get My Wholesale Quote <ArrowRight size={18} />
             </button>
           </form>
 
-          <div className="mt-6 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
+          <div className="mt-6 grid sm:grid-cols-2 gap-3 text-sm text-slate-600">
             <div className="flex items-center gap-2"><Mail size={16} /> {siteConfig.contact.email}</div>
             <div className="flex items-center gap-2"><Phone size={16} /> WhatsApp: {siteConfig.contact.whatsapp}</div>
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <a href={whatsappHref} target="_blank" rel="noreferrer" className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">WhatsApp</a>
-            <a href={linkedinHref} target="_blank" rel="noreferrer" className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">LinkedIn</a>
+            <a href={siteConfig.social.linkedin} target="_blank" rel="noreferrer" className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">LinkedIn</a>
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-20">
+        <div className="rounded-[2rem] bg-white text-slate-950 p-6 md:p-8 shadow-2xl">
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
+            <div>
+              <h3 className="text-2xl font-black">Contact Channels</h3>
+              <div className="mt-5 grid sm:grid-cols-2 gap-3 text-sm">
+                <div className="rounded-xl bg-slate-100 px-4 py-3 font-medium">{siteConfig.contact.email}</div>
+                <div className="rounded-xl bg-slate-100 px-4 py-3 font-medium">{siteConfig.contact.phone}</div>
+                <div className="rounded-xl bg-slate-100 px-4 py-3 font-medium">{siteConfig.contact.whatsapp}</div>
+                <div className="rounded-xl bg-slate-100 px-4 py-3 font-medium break-all">LinkedIn: {siteConfig.social.linkedin}</div>
+              </div>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <a href={whatsappHref} target="_blank" rel="noreferrer" className="rounded-full bg-slate-950 text-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-800">WhatsApp</a>
+                <a href={siteConfig.social.linkedin} target="_blank" rel="noreferrer" className="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">LinkedIn</a>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-5">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">WhatsApp QR Code</p>
+                <div className="w-full max-w-[280px] aspect-square rounded-xl border border-slate-300 bg-white p-2">
+                  <img src="/branding/whatsapp-qr.jpg" alt="WhatsApp QR Code" className="w-full h-full object-contain" />
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Junhai Business Card</p>
+                <img src="/branding/business-card.png" alt="Junhai Business Card" className="w-full max-w-[320px] rounded-xl border border-slate-300 object-cover" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <footer className="border-t border-white/10 bg-slate-950">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10 text-sm text-slate-400 md:flex-row md:items-center md:justify-between md:px-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 flex flex-col md:flex-row gap-6 md:items-center md:justify-between text-sm text-slate-400">
           <div>
-            <div className="text-lg font-bold text-white">China Doll Supply</div>
-            <div className="mt-1">Factory-direct silicone and TPE doll wholesale supply from China.</div>
+            <div className="text-white font-bold text-lg">JUNHAI International Trading Co., Ltd.</div>
+            <div className="mt-1">Factory-direct wholesale supply with OEM/ODM support for global B2B buyers.</div>
           </div>
           <div className="flex flex-wrap gap-5">
             <a href="#products" className="hover:text-white">Products</a>
@@ -597,4 +682,3 @@ export default function Home() {
     </div>
   );
 }
-
