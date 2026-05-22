@@ -2,13 +2,13 @@
 import { products } from '@/src/data/products';
 
 function generateProductsCatalog() {
-  const headers = ['Product ID', 'Product Name', 'Category', 'Price(USD)', 'MOQ', 'Weight', 'Certification', 'Stock Status'];
+  const headers = ['Product ID', 'Product Name', 'Category', 'Pricing', 'MOQ', 'Weight', 'Certification', 'Stock Status'];
   
   const rows = products.map((product) => [
     product.id,
     product.name,
     product.category,
-    product.price.toString(),
+    'Inquiry for Bulk Quote',
     product.moq,
     product.weight || 'N/A',
     (product.certified || []).join('; '),
@@ -25,14 +25,14 @@ function generateProductsCatalog() {
 
 function generatePriceList() {
   const content = `
-JUNHAI WHOLESALE - PRICE LIST
+JUNHAI WHOLESALE - BULK QUOTE GUIDE
 ================================
 Company: JUNHAI International Trading Co., Ltd.
 Website: https://junhai-wholesale.com
 
 PRODUCT CATALOG (${products.length} SKUs)
 ================================
-${products.map((p, i) => `${i + 1}. ${p.name} (${p.id})\n   Price: $${p.price}\n   MOQ: ${p.moq}`).join('\n')}
+${products.map((p, i) => `${i + 1}. ${p.name} (${p.id})\n   Price: Inquiry for Bulk Quote\n   MOQ: ${p.moq}`).join('\n')}
 `;
   return content;
 }

@@ -27,6 +27,7 @@ export default function ProductsPage() {
   const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
   const [lang, setLang] = useState<SiteLanguage>('en');
   const [showAdultWarning, setShowAdultWarning] = useState(false);
+  const [pendingDollsSelection, setPendingDollsSelection] = useState(false);
   const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
 
   useEffect(() => {
@@ -39,6 +40,13 @@ export default function ProductsPage() {
     };
     window.addEventListener('site-language-change', onLangChange as EventListener);
     return () => window.removeEventListener('site-language-change', onLangChange as EventListener);
+  }, []);
+
+  useEffect(() => {
+    const accepted = window.localStorage.getItem('adult_content_ok_dolls') === 'yes';
+    if (!accepted) {
+      setShowAdultWarning(true);
+    }
   }, []);
 
   const filteredProducts = useMemo(() => {
@@ -104,6 +112,7 @@ export default function ProductsPage() {
                     if (cat.id === 'dolls') {
                       const accepted = window.localStorage.getItem('adult_content_ok_dolls') === 'yes';
                       if (!accepted) {
+                        setPendingDollsSelection(true);
                         setShowAdultWarning(true);
                         return;
                       }
@@ -190,7 +199,10 @@ export default function ProductsPage() {
               <button
                 onClick={() => {
                   window.localStorage.setItem('adult_content_ok_dolls', 'yes');
-                  setSelectedCategory('dolls');
+                  if (pendingDollsSelection) {
+                    setSelectedCategory('dolls');
+                  }
+                  setPendingDollsSelection(false);
                   setShowAdultWarning(false);
                 }}
                 className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
