@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { Filter, PackageCheck } from 'lucide-react';
 import { getLocalizedProductCopy, products, categories } from '../../src/data/products';
 import { siteConfig } from '../../src/config/site';
-import LanguageSwitcher, { getBrowserLanguage, SiteLanguage } from '../../src/components/LanguageSwitcher';
+import { getBrowserLanguage, SiteLanguage } from '../../src/components/LanguageSwitcher';
+import SiteHeader from '../../src/components/SiteHeader';
+import SiteFooter from '../../src/components/SiteFooter';
 
 const CATEGORY_NAME: Record<string, { en: string; zh: string; es: string }> = {
   'personal-wellness': { en: 'Personal Wellness', zh: '个人护理', es: 'Bienestar Personal' },
@@ -58,32 +60,10 @@ export default function ProductsPage() {
   }, [selectedCategory, selectedCerts]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto max-w-7xl px-4 py-2 text-xs text-slate-600 sm:px-6 lg:px-8">
-          B2B Export Supply | Foshan Junhai Trading Co., Ltd.
-        </div>
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3" aria-label="Go to JUNHAI homepage">
-            <img src="/branding/junhai-logo.jpg" alt="Junhai Logo" className="h-12 w-12 rounded-full object-cover" />
-            <div>
-              <p className="text-lg font-bold tracking-wide">JUNHAI</p>
-              <p className="text-xs uppercase text-slate-500">JUNHAI Wholesale Division</p>
-            </div>
-          </Link>
-          <div className="hidden items-center gap-8 md:flex">
-            <Link href="/products" className="text-sm font-semibold text-slate-900">Products</Link>
-            <Link href="/about" className="text-sm font-medium text-slate-600 hover:text-slate-900">Company</Link>
-            <Link href="/contact" className="text-sm font-medium text-slate-600 hover:text-slate-900">Contact</Link>
-            <LanguageSwitcher />
-            <a href={whatsappHref} target="_blank" rel="noreferrer" className="rounded-lg bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
-              Get Price Sheet
-            </a>
-          </div>
-        </nav>
-      </header>
+    <div className="min-h-screen bg-[var(--bg-app)] text-[var(--brand-ink)]">
+      <SiteHeader />
 
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 py-16 text-white">
+      <section className="border-b border-[var(--brand-line)] bg-[linear-gradient(140deg,#0b2a55_0%,#154583_60%,#d3ad55_160%)] py-16 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-black md:text-5xl">B2B Product Portfolio</h1>
           <p className="mt-4 max-w-3xl text-slate-200">Filtered by category and compliance tags for distributor-level sourcing.</p>
@@ -92,7 +72,7 @@ export default function ProductsPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
-          <aside className="rounded-2xl border border-slate-200 bg-white p-6">
+          <aside className="rounded-2xl border border-[var(--brand-line)] bg-white p-6 shadow-sm">
             <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-slate-900">
               <Filter size={18} /> Filter
             </h2>
@@ -148,7 +128,7 @@ export default function ProductsPage() {
             <p className="mb-5 text-sm text-slate-600">Showing {filteredProducts.length} products</p>
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {filteredProducts.map((product) => (
-                <div key={product.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
+                <div key={product.id} className="rounded-2xl border border-[var(--brand-line)] bg-white p-5 shadow-sm transition hover:shadow-md">
                   {(() => {
                     const copy = getLocalizedProductCopy(product, lang);
                     return (
@@ -216,6 +196,8 @@ export default function ProductsPage() {
           </div>
         </div>
       )}
+
+      <SiteFooter />
     </div>
   );
 }

@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { Mail, MessageCircle, Phone, Send } from 'lucide-react';
 import { siteConfig } from '../../src/config/site';
-import LanguageSwitcher from '../../src/components/LanguageSwitcher';
+import SiteHeader from '../../src/components/SiteHeader';
+import SiteFooter from '../../src/components/SiteFooter';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
@@ -18,32 +18,10 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto max-w-7xl px-4 py-2 text-xs text-slate-600 sm:px-6 lg:px-8">
-          B2B Export Supply | Foshan Junhai Trading Co., Ltd.
-        </div>
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3" aria-label="Go to JUNHAI homepage">
-            <img src="/branding/junhai-logo.jpg" alt="Junhai Logo" className="h-12 w-12 rounded-full object-cover" />
-            <div>
-              <p className="text-lg font-bold tracking-wide">JUNHAI</p>
-              <p className="text-xs uppercase text-slate-500">JUNHAI Wholesale Division</p>
-            </div>
-          </Link>
-          <div className="hidden items-center gap-8 md:flex">
-            <Link href="/products" className="text-sm font-medium text-slate-600 hover:text-slate-900">Products</Link>
-            <Link href="/about" className="text-sm font-medium text-slate-600 hover:text-slate-900">Company</Link>
-            <Link href="/contact" className="text-sm font-semibold text-slate-900">Contact</Link>
-            <LanguageSwitcher />
-            <a href={whatsappHref} target="_blank" rel="noreferrer" className="rounded-lg bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
-              Get Price Sheet
-            </a>
-          </div>
-        </nav>
-      </header>
+    <div className="min-h-screen bg-[var(--bg-app)] text-[var(--brand-ink)]">
+      <SiteHeader />
 
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 py-16 text-white">
+      <section className="border-b border-[var(--brand-line)] bg-[linear-gradient(140deg,#0b2a55_0%,#154583_62%,#d3ad55_160%)] py-16 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-black md:text-5xl">Connect With JUNHAI Sales Team</h1>
           <p className="mt-4 max-w-3xl text-slate-200">Send your target market and MOQ plan. We will provide matching SKUs and shipping options.</p>
@@ -55,7 +33,7 @@ export default function ContactPage() {
       </section>
 
       <section className="mx-auto grid max-w-7xl gap-6 px-4 py-12 sm:px-6 lg:grid-cols-3 lg:px-8">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-[var(--brand-line)] bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-xl font-bold text-slate-900">Contact Channels</h2>
           <div className="space-y-4 text-sm text-slate-600">
             <p className="flex items-center gap-2"><Mail size={16} /> {siteConfig.contact.email}</p>
@@ -76,7 +54,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div id="inquiry" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+        <div id="inquiry" className="rounded-2xl border border-[var(--brand-line)] bg-white p-6 shadow-sm lg:col-span-2">
           <h2 className="mb-4 text-xl font-bold text-slate-900">Business Inquiry</h2>
           <form onSubmit={onSubmit} className="grid gap-4 md:grid-cols-2">
             <input
@@ -121,6 +99,8 @@ export default function ContactPage() {
           {status && <p className="mt-4 text-sm text-emerald-700">{status}</p>}
         </div>
       </section>
+
+      <SiteFooter />
     </div>
   );
 }

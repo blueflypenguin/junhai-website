@@ -1,42 +1,18 @@
 import Link from 'next/link';
 import { Building2, Factory, Globe2, ShieldCheck } from 'lucide-react';
-import { siteConfig } from '../../src/config/site';
-import LanguageSwitcher from '../../src/components/LanguageSwitcher';
 import ManufacturingExcellence from '../../src/components/ManufacturingExcellence';
+import SiteHeader from '../../src/components/SiteHeader';
+import SiteFooter from '../../src/components/SiteFooter';
 
 export default function AboutPage() {
-  const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
-
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto max-w-7xl px-4 py-2 text-xs text-slate-600 sm:px-6 lg:px-8">
-          B2B Export Supply | Foshan Junhai Trading Co., Ltd.
-        </div>
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3" aria-label="Go to JUNHAI homepage">
-            <img src="/branding/junhai-logo.jpg" alt="Junhai Logo" className="h-12 w-12 rounded-full object-cover" />
-            <div>
-              <p className="text-lg font-bold tracking-wide">JUNHAI</p>
-              <p className="text-xs uppercase text-slate-500">JUNHAI Wholesale Division</p>
-            </div>
-          </Link>
-          <div className="hidden items-center gap-8 md:flex">
-            <Link href="/products" className="text-sm font-medium text-slate-600 hover:text-slate-900">Products</Link>
-            <Link href="/about" className="text-sm font-semibold text-slate-900">Company</Link>
-            <Link href="/contact" className="text-sm font-medium text-slate-600 hover:text-slate-900">Contact</Link>
-            <LanguageSwitcher />
-            <a href={whatsappHref} target="_blank" rel="noreferrer" className="rounded-lg bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
-              Get Price Sheet
-            </a>
-          </div>
-        </nav>
-      </header>
+    <div className="min-h-screen bg-[var(--bg-app)] text-[var(--brand-ink)]">
+      <SiteHeader />
 
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 py-16 text-white">
+      <section className="bg-[linear-gradient(135deg,#0b2a55_0%,#133d78_62%,#1a4f96_100%)] py-16 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-black md:text-5xl">Built For Reliable Global Supply</h1>
-          <p className="mt-4 max-w-3xl text-slate-200">JUNHAI focuses on compliant sourcing, stable delivery, and long-term distributor partnerships.</p>
+          <p className="mt-4 max-w-3xl text-slate-200">工厂能力 + 能力背书 + 合作SOP，构建长期稳定的 B2B 供货关系。</p>
         </div>
       </section>
 
@@ -83,6 +59,7 @@ export default function AboutPage() {
       </section>
 
       <ManufacturingExcellence className="mx-auto max-w-7xl px-4 pb-14 sm:px-6 lg:px-8" compact />
+      <SiteFooter />
     </div>
   );
 }
