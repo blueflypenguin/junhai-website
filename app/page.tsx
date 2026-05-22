@@ -196,6 +196,19 @@ const factoryCapabilities = [
   },
 ];
 
+const factoryMediaClips = [
+  {
+    title: 'Factory Video 01',
+    fileName: 'factory-video-1.mp4',
+    src: '/videos/factory-video-1.mp4',
+  },
+  {
+    title: 'Factory Video 02',
+    fileName: 'factory-video-2.mp4',
+    src: '/videos/factory-video-2.mp4',
+  },
+];
+
 const advantages = [
   {
     icon: Factory,
@@ -570,13 +583,21 @@ export default function Home() {
               {t.factoryMediaButton} <ArrowRight size={16} />
             </Link>
           </div>
-          <div className="rounded-2xl overflow-hidden border border-white/10 bg-black">
-            <video className="w-full h-[260px] md:h-[420px] object-cover" controls muted preload="metadata" poster="/images/materials/factory-exterior.jpg">
-              <source src="/videos/factory-production-walkthrough.mp4" type="video/mp4" />
-            </video>
-          </div>
-          <div className="mt-4 inline-flex items-center gap-2 text-sm text-slate-300">
-            <PlayCircle size={16} /> factory-production-walkthrough.mp4
+          <div className="grid gap-5 sm:grid-cols-2 justify-center">
+            {factoryMediaClips.map((clip) => (
+              <div key={clip.src} className="mx-auto w-full max-w-[320px]">
+                <div className="rounded-2xl overflow-hidden border border-white/10 bg-black">
+                  <div className="relative aspect-[9/16] bg-black">
+                    <video className="absolute inset-0 h-full w-full object-contain" controls muted playsInline preload="metadata">
+                      <source src={clip.src} type="video/mp4" />
+                    </video>
+                  </div>
+                </div>
+                <div className="mt-3 inline-flex items-center gap-2 text-sm text-slate-300">
+                  <PlayCircle size={16} /> {clip.fileName}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
