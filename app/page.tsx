@@ -5,7 +5,6 @@ import {
   ArrowRight,
   Boxes,
   CheckCircle2,
-  ClipboardCheck,
   Factory,
   Globe2,
   Mail,
@@ -23,22 +22,22 @@ const categories = [
   {
     title: 'Silicone Dolls',
     desc: 'Premium models for distributors and private-label adult product brands.',
-    image: '/images/template/hero-product.png',
+    image: '/images/materials/product-head-pink-wig.jpg',
   },
   {
     title: 'TPE Dolls',
     desc: 'Cost-effective options for bulk wholesale and market testing.',
-    image: '/images/template/hero-layout.png',
+    image: '/images/materials/factory-face-detailing.jpg',
   },
   {
     title: 'Torso & Mini Dolls',
     desc: 'Compact products with lower shipping cost and flexible trial orders.',
-    image: '/images/template/hero-product.png',
+    image: '/images/materials/factory-drying-line.jpg',
   },
   {
     title: 'Custom OEM Models',
     desc: 'Face, body, skin tone, makeup, packaging and logo customization.',
-    image: '/images/template/hero-layout.png',
+    image: '/images/materials/factory-packaging-area.jpg',
   },
 ];
 
@@ -177,7 +176,7 @@ export default function Home() {
           <div className="relative">
             <div className="rounded-[2rem] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-sm md:p-6">
               <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-slate-900">
-                <img src="/images/template/hero-product.png" alt="Silicone doll wholesale hero" className="h-80 w-full object-cover md:h-[430px]" />
+                <img src="/images/materials/brand-showroom.jpg" alt="Silicone doll wholesale hero" className="h-80 w-full object-cover md:h-[430px]" />
                 <div className="grid grid-cols-3 border-t border-white/10">
                   <div className="border-r border-white/10 p-4">
                     <div className="text-2xl font-black">24h</div>
@@ -282,14 +281,12 @@ export default function Home() {
           </div>
         </div>
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-6">
-          <div className="flex min-h-[380px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-8 text-center">
-            <div>
-              <ClipboardCheck size={52} className="mx-auto mb-5" />
-              <h3 className="text-2xl font-bold">OEM Visual Board</h3>
-              <p className="mx-auto mt-3 max-w-md text-slate-300">
-                Face options, skin tones, wig colors, packaging mockups and logo placement for private-label requests.
-              </p>
-            </div>
+          <div className="grid gap-4 rounded-[1.5rem] border border-white/10 bg-slate-900 p-4">
+            <img src="/images/materials/factory-airbrush-makeup.jpg" alt="Airbrush makeup process" className="h-44 w-full rounded-xl object-cover" />
+            <img src="/images/materials/factory-face-detailing.jpg" alt="Face detailing process" className="h-44 w-full rounded-xl object-cover" />
+            <p className="text-center text-sm text-slate-300">
+              Real production snapshots: makeup refinement and detail finishing for OEM requests.
+            </p>
           </div>
         </div>
       </section>
@@ -323,6 +320,7 @@ export default function Home() {
               <ShieldCheck size={28} />
             </div>
             <h2 className="text-3xl font-black">Factory Resources & Quality Control</h2>
+            <img src="/images/materials/factory-molding-workshop.jpg" alt="Factory molding workshop" className="mt-4 h-48 w-full rounded-xl object-cover" />
             <p className="mt-4 leading-relaxed text-slate-300">
               We support buyers with product selection, customization coordination, pre-shipment checking, packaging confirmation and shipment arrangement.
             </p>
@@ -347,6 +345,7 @@ export default function Home() {
               <Truck size={28} />
             </div>
             <h2 className="text-3xl font-black">Discreet Packaging & Global Shipping</h2>
+            <img src="/images/materials/factory-assembly-hall.jpg" alt="Factory assembly hall" className="mt-4 h-48 w-full rounded-xl object-cover" />
             <p className="mt-4 leading-relaxed text-slate-300">
               Products can be shipped in neutral cartons without adult-related words on the outside. Shipping solutions are selected based on destination, quantity and buyer requirements.
             </p>
@@ -364,6 +363,30 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-20 md:px-8">
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.05] p-6">
+            <h3 className="text-2xl font-black">Factory Production Walkthrough</h3>
+            <p className="mt-2 text-sm text-slate-300">Live clip from workshop floor, used for buyer trust verification.</p>
+            <video
+              className="mt-4 h-[420px] w-full rounded-xl object-cover"
+              src="/videos/factory-production-walkthrough.mp4"
+              poster="/images/materials/factory-drying-line.jpg"
+              controls
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+          </div>
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.05] p-6">
+            <h3 className="text-2xl font-black">Packing & Shipment Readiness</h3>
+            <p className="mt-2 text-sm text-slate-300">Finished goods staging and carton preparation before export shipment.</p>
+            <img src="/images/materials/factory-packaging-area.jpg" alt="Packing and shipment area" className="mt-4 h-[420px] w-full rounded-xl object-cover" />
           </div>
         </div>
       </section>
