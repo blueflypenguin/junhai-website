@@ -363,10 +363,10 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative">
-            <div className="rounded-[2rem] border border-white/15 bg-white/10 shadow-2xl p-4 md:p-6 backdrop-blur-sm">
+          <div className="relative max-w-[560px] mx-auto">
+            <div className="rounded-[2rem] border border-white/15 bg-white/10 shadow-2xl p-3 md:p-4 backdrop-blur-sm">
               <div className="rounded-[1.5rem] bg-slate-900 border border-white/10 overflow-hidden">
-                <img src="/images/docx-template/image2.png" alt="Hero right visual" className="h-80 md:h-[430px] w-full object-contain bg-slate-950" />
+                <img src="/images/docx-template/image2.png" alt="Hero right visual" className="block w-full h-auto object-contain bg-slate-950" />
                 <div className="grid grid-cols-3 border-t border-white/10">
                   <div className="p-4 border-r border-white/10">
                     <div className="text-2xl font-black">24h</div>
