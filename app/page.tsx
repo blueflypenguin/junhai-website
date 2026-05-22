@@ -316,10 +316,13 @@ export default function Home() {
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-slate-950/80 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/branding/junhai-logo.jpg" alt="Junhai Logo" className="w-10 h-10 rounded-full border border-white/30 object-cover" />
-            <div>
-              <div className="font-bold tracking-wide">JUNHAI International Trading Co., Ltd.</div>
-              <div className="text-xs text-slate-400">Foshan, China · Wholesale · OEM · Factory Resources</div>
+            <img src="/branding/junhai-logo.jpg" alt="Junhai Logo" className="w-10 h-10 rounded-full border border-white/30 object-cover flex-shrink-0" />
+            <div className="min-w-0">
+              <div className="font-bold tracking-wide text-sm md:text-base truncate">
+                <span className="hidden sm:inline">JUNHAI International Trading Co., Ltd.</span>
+                <span className="sm:hidden">JUNHAI Co., Ltd.</span>
+              </div>
+              <div className="text-xs text-slate-400 hidden sm:block">Foshan, China · Wholesale · OEM · Factory Resources</div>
             </div>
           </div>
           <nav className="hidden lg:flex items-center gap-7 text-sm text-slate-300">
@@ -342,12 +345,12 @@ export default function Home() {
 
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.28),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(168,85,247,0.18),transparent_30%)]" />
-        <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24 grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-10 md:py-24 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-slate-300 mb-6">
               <CheckCircle2 size={16} /> Factory-direct B2B supply from China
             </div>
-            <h1 className="text-4xl md:text-6xl font-black leading-tight tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
               Silicone Doll Wholesale Supplier for Global Buyers
             </h1>
             <p className="mt-6 text-lg md:text-xl text-slate-300 leading-relaxed max-w-2xl">
@@ -401,7 +404,7 @@ export default function Home() {
       </section>
 
       <section className="border-y border-white/10 bg-white/[0.03]">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 grid grid-cols-2 md:grid-cols-5 gap-4 text-center text-sm text-slate-300">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-6 flex flex-wrap justify-center gap-x-6 gap-y-2.5 md:grid md:grid-cols-5 md:gap-4 text-center text-xs md:text-sm text-slate-300">
           <div>Factory Resources</div>
           <div>Wholesale Price</div>
           <div>OEM/ODM</div>
@@ -442,7 +445,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="products" className="max-w-7xl mx-auto px-4 md:px-8 py-20">
+      <section id="products" className="max-w-7xl mx-auto px-4 md:px-8 py-10 md:py-20">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-slate-400">{t.productLinesTag}</p>
@@ -488,8 +491,8 @@ export default function Home() {
       </section>
 
       <section className="bg-slate-900/60 border-y border-white/10">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-20">
-          <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 md:py-20">
+          <div className="text-center max-w-3xl mx-auto mb-8 md:mb-12">
             <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Why Work With Us</p>
             <h2 className="mt-3 text-3xl md:text-5xl font-black">Built for Adult Product Importers</h2>
             <p className="mt-5 text-slate-300 leading-relaxed">
@@ -513,7 +516,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="oem" className="max-w-7xl mx-auto px-4 md:px-8 py-20">
+      <section id="oem" className="max-w-7xl mx-auto px-4 md:px-8 py-10 md:py-20">
         <div className="max-w-4xl">
           <p className="text-sm uppercase tracking-[0.25em] text-slate-400">OEM / ODM</p>
           <h2 className="mt-3 text-3xl md:text-5xl font-black">Custom Doll Solutions for Your Brand</h2>
@@ -548,7 +551,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-20">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-10 md:pb-20">
         <div className="mb-8">
           <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Manufacturing Excellence</p>
           <h2 className="mt-3 text-3xl md:text-5xl font-black">Verified Source Manufacturing Capability</h2>
@@ -571,7 +574,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-20">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-10 md:pb-20">
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 md:p-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6">
             <div>
@@ -602,7 +605,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-20">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-10 md:pb-20">
         <div className="rounded-[2rem] bg-white text-slate-950 p-6 md:p-10">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
             <div>
@@ -625,7 +628,7 @@ export default function Home() {
       </section>
 
       <section id="quality" className="bg-slate-900/60 border-y border-white/10">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-20 grid lg:grid-cols-2 gap-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 md:py-20 grid lg:grid-cols-2 gap-8">
           <div className="rounded-[2rem] bg-white/[0.05] border border-white/10 p-7">
             <div className="w-14 h-14 rounded-2xl bg-white text-slate-950 flex items-center justify-center mb-6">
               <ShieldCheck size={28} />
@@ -676,7 +679,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="quote" className="max-w-7xl mx-auto px-4 md:px-8 py-20 grid lg:grid-cols-2 gap-10 items-start">
+      <section id="quote" className="max-w-7xl mx-auto px-4 md:px-8 py-10 md:py-20 grid lg:grid-cols-2 gap-10 items-start">
         <div>
           <p className="text-sm uppercase tracking-[0.25em] text-slate-400">FAQ</p>
           <h2 className="mt-3 text-3xl md:text-5xl font-black">Common Questions from Buyers</h2>
@@ -732,7 +735,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-20">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pb-10 md:pb-20">
         <div className="rounded-[2rem] bg-white text-slate-950 p-6 md:p-8 shadow-2xl">
           <div className="grid lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
             <div>
