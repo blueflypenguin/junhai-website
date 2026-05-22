@@ -171,7 +171,6 @@ export default function ProductsPage() {
                 <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                   <div>
                     <h2 className="text-2xl font-black md:text-3xl">{lang === 'zh' ? category.zh : category.en}</h2>
-                    <p className="mt-1 text-sm text-slate-300">{lang === 'zh' ? category.en : category.zh}</p>
                   </div>
                   <p className="text-sm font-semibold text-slate-300">
                     {lang === 'zh' ? `共 ${products.length} ${t.countSuffix}` : `${products.length} ${t.countSuffix}`}
@@ -197,7 +196,6 @@ export default function ProductsPage() {
                           <div className="p-4">
                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">SKU {product.id}</p>
                             <h3 className="mt-1 line-clamp-2 min-h-12 text-sm font-bold text-white">{productName}</h3>
-                            <p className="mt-1 text-xs text-slate-400">{lang === 'zh' ? product.nameEn : productNameZh}</p>
 
                             <div className="mt-4 grid grid-cols-2 gap-2">
                               <a
