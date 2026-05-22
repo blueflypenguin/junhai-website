@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ArrowRight,
   Boxes,
@@ -16,7 +16,8 @@ import {
   BadgeCheck,
 } from 'lucide-react';
 import { siteConfig } from '../src/config/site';
-import LanguageSwitcher from '../src/components/LanguageSwitcher';
+import LanguageSwitcher, { getBrowserLanguage, SiteLanguage } from '../src/components/LanguageSwitcher';
+import catalogProducts from '../src/data/catalogProducts.json';
 
 const categories = [
   {
@@ -102,16 +103,97 @@ const faq = [
   },
 ];
 
+const CATEGORY_ORDER = [
+  { zh: '全身定制硅胶娃娃', en: 'Full-Body Custom Silicone Dolls' },
+  { zh: '半身倒模', en: 'Half-Body Molded Dolls' },
+  { zh: '飞机杯', en: 'Masturbator Cups' },
+  { zh: '女性玩具', en: 'Female Toys' },
+  { zh: '情趣制服', en: 'Lingerie & Costumes' },
+  { zh: '阳具', en: 'Dildos' },
+  { zh: 'BDSM', en: 'BDSM' },
+  { zh: '贞操锁', en: 'Chastity Cages' },
+  { zh: '安全套', en: 'Condoms' },
+] as const;
+
+const COPY = {
+  en: {
+    topNotice: 'B2B wholesale supply for importers, distributors and private-label adult product brands.',
+    topBadge: 'Fast quote · OEM/ODM · Discreet global shipping',
+    navProducts: 'Products',
+    navOEM: 'OEM/ODM',
+    navFactory: 'Factory & QC',
+    navShipping: 'Shipping',
+    navContact: 'Contact',
+    quote: 'Get Quote',
+    catalogTitle: 'Distributor Catalog by Major Category',
+    catalogDesc: 'Products synchronized from your latest Excel catalog with bilingual category display.',
+    factoryExterior: 'Factory Exterior',
+    factoryExteriorDesc: 'Modern production campus and stable large-scale manufacturing support.',
+    wholesalePrice: 'Wholesale Price',
+  },
+  zh: {
+    topNotice: '面向进口商、分销商、私牌品牌的B2B批发供货服务。',
+    topBadge: '快速报价 · OEM/ODM · 隐私化全球物流',
+    navProducts: '产品',
+    navOEM: '定制',
+    navFactory: '工厂与质检',
+    navShipping: '物流',
+    navContact: '联系',
+    quote: '获取报价',
+    catalogTitle: '按大分类展示的分销产品目录',
+    catalogDesc: '已根据你提供的Excel同步产品，并支持中英文分类展示。',
+    factoryExterior: '工厂外景',
+    factoryExteriorDesc: '现代化生产园区，支持稳定规模化制造交付。',
+    wholesalePrice: '批发价',
+  },
+} as const;
+
+type CatalogProduct = {
+  id: string;
+  categoryZh: string;
+  categoryEn: string;
+  nameZh: string;
+  nameEn: string;
+  priceWholesale: string | number;
+  image: string;
+};
+
 export default function Home() {
+  const [lang, setLang] = useState<SiteLanguage>('en');
   const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, '')}`;
   const linkedinHref = siteConfig.social.linkedin;
+  const t = lang === 'zh' ? COPY.zh : COPY.en;
+
+  const cleanCatalog = useMemo(
+    () => (catalogProducts as CatalogProduct[]).filter((p) => p.nameZh && p.nameZh !== 'None'),
+    []
+  );
+
+  const groupedCatalog = useMemo(
+    () =>
+      CATEGORY_ORDER.map((cat) => ({
+        ...cat,
+        items: cleanCatalog.filter((p) => p.categoryZh === cat.zh).slice(0, 4),
+      })),
+    [cleanCatalog]
+  );
+
+  useEffect(() => {
+    setLang(getBrowserLanguage());
+    const onLangChange = (event: Event) => {
+      const next = (event as CustomEvent<SiteLanguage>).detail;
+      if (next) setLang(next);
+    };
+    window.addEventListener('site-language-change', onLangChange as EventListener);
+    return () => window.removeEventListener('site-language-change', onLangChange as EventListener);
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <div className="border-b border-white/10 bg-slate-900/80 text-xs text-slate-300 md:text-sm">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2 md:flex-row md:items-center md:justify-between md:px-8">
-          <span>B2B wholesale supply for importers, distributors and private-label adult product brands.</span>
-          <span className="text-slate-400">Fast quote · OEM/ODM · Discreet global shipping</span>
+          <span>{t.topNotice}</span>
+          <span className="text-slate-400">{t.topBadge}</span>
         </div>
       </div>
 
@@ -125,18 +207,18 @@ export default function Home() {
             </div>
           </div>
           <nav className="hidden items-center gap-7 text-sm text-slate-300 lg:flex">
-            <a href="#products" className="hover:text-white">Products</a>
-            <a href="#oem" className="hover:text-white">OEM/ODM</a>
-            <a href="#quality" className="hover:text-white">Factory & QC</a>
-            <a href="#shipping" className="hover:text-white">Shipping</a>
-            <a href="#quote" className="hover:text-white">Contact</a>
+            <a href="#products" className="hover:text-white">{t.navProducts}</a>
+            <a href="#oem" className="hover:text-white">{t.navOEM}</a>
+            <a href="#quality" className="hover:text-white">{t.navFactory}</a>
+            <a href="#shipping" className="hover:text-white">{t.navShipping}</a>
+            <a href="#quote" className="hover:text-white">{t.navContact}</a>
           </nav>
           <div className="flex items-center gap-3">
             <div className="hidden md:block">
               <LanguageSwitcher />
             </div>
             <a href="#quote" className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-slate-200">
-              Get Quote
+              {t.quote}
             </a>
           </div>
         </div>
@@ -207,6 +289,17 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-7xl px-4 py-14 md:px-8">
+        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.05] lg:grid lg:grid-cols-2">
+          <img src="/images/materials/factory-exterior.jpg" alt="Factory exterior" className="h-72 w-full object-cover lg:h-full" />
+          <div className="p-8">
+            <p className="text-sm uppercase tracking-[0.25em] text-slate-400">{t.factoryExterior}</p>
+            <h2 className="mt-3 text-3xl font-black">{lang === 'zh' ? '规模化制造基地' : 'Large-Scale Manufacturing Base'}</h2>
+            <p className="mt-4 text-slate-300">{t.factoryExteriorDesc}</p>
+          </div>
+        </div>
+      </section>
+
       <section id="products" className="mx-auto max-w-7xl px-4 py-20 md:px-8">
         <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
@@ -224,6 +317,46 @@ export default function Home() {
               <div className="p-5">
                 <h3 className="text-xl font-bold">{cat.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate-300">{cat.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 pb-20 md:px-8">
+        <div className="mb-8">
+          <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Distributor Catalog</p>
+          <h2 className="mt-3 text-3xl font-black md:text-5xl">{t.catalogTitle}</h2>
+          <p className="mt-3 max-w-3xl text-slate-300">{t.catalogDesc}</p>
+        </div>
+
+        <div className="space-y-10">
+          {groupedCatalog.map((group) => (
+            <div key={group.zh}>
+              <h3 className="mb-4 text-xl font-bold text-white">
+                {lang === 'zh' ? group.zh : group.en}
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {group.items.map((item) => (
+                  <div key={item.id} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
+                    <img
+                      src={item.image || '/images/materials/factory-exterior.jpg'}
+                      alt={lang === 'zh' ? item.nameZh : item.nameEn}
+                      className="h-44 w-full object-cover"
+                    />
+                    <div className="p-4">
+                      <p className="line-clamp-2 text-sm font-semibold text-white">{lang === 'zh' ? item.nameZh : item.nameEn}</p>
+                      <p className="mt-2 text-xs text-slate-400">
+                        {lang === 'zh' ? '分类' : 'Category'}: {lang === 'zh' ? group.zh : group.en}
+                      </p>
+                      {item.priceWholesale !== '' && (
+                        <p className="mt-2 text-sm text-emerald-300">
+                          {t.wholesalePrice}: {item.priceWholesale}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
