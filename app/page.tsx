@@ -87,7 +87,7 @@ const process = [
 const faq = [
   {
     q: 'Are you a factory or trading company?',
-    a: 'We are a China-based adult doll supply partner with access to selected factory resources, supporting wholesale, OEM/ODM and private-label cooperation.',
+    a: 'We are an integrated manufacturing and trading factory in China, supporting wholesale, OEM/ODM, and private-label cooperation with direct in-house production capability.',
   },
   {
     q: 'Can I order samples before bulk purchase?',
