@@ -41,6 +41,9 @@ const copy = {
     pageDesc: 'Same visual style as homepage. Product detail cards hide price, and inquiry is handled via LinkedIn or WhatsApp.',
     allCategories: 'All Categories',
     countSuffix: 'products',
+    showMorePrefix: 'Need more options?',
+    showMoreWhatsapp: 'Contact WhatsApp',
+    showMoreQuote: 'Request Quote',
     empty: 'No products imported in this category yet.',
     contactLinkedIn: 'LinkedIn',
     contactWhatsApp: 'WhatsApp',
@@ -57,6 +60,9 @@ const copy = {
     pageDesc: '色彩风格与主页统一。产品详情不显示价格，如需规格和报价请联系 LinkedIn 或 WhatsApp。',
     allCategories: '全部分类',
     countSuffix: '个产品',
+    showMorePrefix: '需要查看更多？',
+    showMoreWhatsapp: '联系 WhatsApp',
+    showMoreQuote: '跳转报价请求',
     empty: '该分类暂未导入产品数据',
     contactLinkedIn: 'LinkedIn',
     contactWhatsApp: 'WhatsApp',
@@ -168,13 +174,32 @@ export default function ProductsPage() {
 
             return (
               <div key={category.slug} className="rounded-3xl border border-white/10 bg-white/[0.05] p-6 md:p-8">
-                <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                   <div>
                     <h2 className="text-2xl font-black md:text-3xl">{lang === 'zh' ? category.zh : category.en}</h2>
                   </div>
-                  <p className="text-sm font-semibold text-slate-300">
-                    {lang === 'zh' ? `共 ${products.length} ${t.countSuffix}` : `${products.length} ${t.countSuffix}`}
-                  </p>
+                  <div className="flex flex-col items-start gap-2 md:items-end">
+                    <p className="text-sm font-semibold text-slate-300">
+                      {lang === 'zh' ? `共 ${products.length} ${t.countSuffix}` : `${products.length} ${t.countSuffix}`}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2 md:justify-end">
+                      <span className="text-xs text-slate-400">{t.showMorePrefix}</span>
+                      <a
+                        href={whatsappHref}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full border border-emerald-300/50 px-3 py-1 text-xs font-semibold text-emerald-200 hover:bg-emerald-500/10"
+                      >
+                        <MessageCircle size={12} /> {t.showMoreWhatsapp}
+                      </a>
+                      <Link
+                        href="/#quote"
+                        className="inline-flex items-center gap-1 rounded-full border border-cyan-300/50 px-3 py-1 text-xs font-semibold text-cyan-200 hover:bg-cyan-500/10"
+                      >
+                        <ExternalLink size={12} /> {t.showMoreQuote}
+                      </Link>
+                    </div>
+                  </div>
                 </div>
 
                 {products.length === 0 ? (

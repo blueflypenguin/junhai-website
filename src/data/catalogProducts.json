@@ -15,7 +15,7 @@
     "nameZh": "一线天穴（非真人复制私处）",
     "nameEn": "Full-Body Custom Silicone Dolls Item 02",
     "priceWholesale": 14,
-    "image": ""
+    "image": "/images/catalog/full-body-silicone-dolls-02.jpg"
   },
   {
     "id": "full-body-silicone-dolls-03",
@@ -24,7 +24,7 @@
     "nameZh": "蝴蝶穴（非真人复制私处）",
     "nameEn": "Full-Body Custom Silicone Dolls Item 03",
     "priceWholesale": 8,
-    "image": ""
+    "image": "/images/catalog/full-body-silicone-dolls-03.jpg"
   },
   {
     "id": "full-body-silicone-dolls-04",
@@ -43,6 +43,33 @@
     "nameEn": "Half-Body Molded Dolls Item 01",
     "priceWholesale": 19,
     "image": "/images/catalog/half-body-molded-dolls-01.jpg"
+  },
+  {
+    "id": "half-body-molded-dolls-02",
+    "categoryZh": "半身倒模",
+    "categoryEn": "Half-Body Molded Dolls",
+    "nameZh": "半身模塑娃娃 02",
+    "nameEn": "Half-Body Molded Dolls Item 02",
+    "priceWholesale": 19,
+    "image": "/images/catalog/half-body-molded-dolls-02.jpg"
+  },
+  {
+    "id": "half-body-molded-dolls-03",
+    "categoryZh": "半身倒模",
+    "categoryEn": "Half-Body Molded Dolls",
+    "nameZh": "半身模塑娃娃 03",
+    "nameEn": "Half-Body Molded Dolls Item 03",
+    "priceWholesale": 19,
+    "image": "/images/catalog/half-body-molded-dolls-03.jpg"
+  },
+  {
+    "id": "half-body-molded-dolls-04",
+    "categoryZh": "半身倒模",
+    "categoryEn": "Half-Body Molded Dolls",
+    "nameZh": "半身模塑娃娃 04",
+    "nameEn": "Half-Body Molded Dolls Item 04",
+    "priceWholesale": 19,
+    "image": "/images/catalog/half-body-molded-dolls-04.jpg"
   },
   {
     "id": "masturbator-cups-01",
