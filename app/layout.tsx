@@ -1,6 +1,7 @@
 ﻿import type { Metadata, Viewport } from "next";
 import { Lato, Montserrat } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -73,6 +74,7 @@ export default function RootLayout({
             } catch (e) {}
           })();`}
         </Script>
+        <Analytics />
         {children}
       </body>
     </html>
